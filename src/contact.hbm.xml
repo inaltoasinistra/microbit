@@ -1,0 +1,23 @@
+<?xml version='1.0'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.silix.the9ull.microbit">
+	<class name="ContactP" table="Contact">
+		
+		<composite-id>
+			<!-- <key-many-to-one name="id_user"/> -->
+			<!-- <key-property name="id_user" type="int"><column name="`id_user`"/></key-property> -->
+			<key-many-to-one name="user" class="UserP">
+				<column name="`id_user`" not-null="true"/>
+			</key-many-to-one>
+			<key-property name="alias" type="string">
+				<column name="`alias`"/>
+			</key-property>
+		</composite-id>
+		<property name="address">
+			<column name="`address`"/>
+		</property>
+	</class>
+</hibernate-mapping>

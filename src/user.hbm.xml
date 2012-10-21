@@ -1,0 +1,41 @@
+<?xml version='1.0'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping package="org.silix.the9ull.microbit">
+<class name="UserP" table="User">
+<id name="id" type="int" column="`id`" >
+<generator class="identity"/>
+</id>
+
+<property name="deposit_address" type="string" unique="true">
+	<column name="`deposit_address`" length="40"/> 
+</property>
+<property name="password" type="string"><column name="`password`"/></property>
+<property name="fund" type="big_decimal"><column name="`fund`"/></property>
+<property name="email" type="string"><column name="`email`"/></property>
+
+<set name="contacts" table="`Contact`" inverse="true" lazy="false" fetch="select">
+<key>
+<column name="`id_user`" not-null="true"/>
+</key>
+<one-to-many class="ContactP" />
+</set>
+<set name="history_to" table="`History`" inverse="true" lazy="true" fetch="select">
+<key>
+<column name="`to`" not-null="true"/>
+</key>
+<one-to-many class="HistoryP" />
+</set>
+<set name="history_from" table="`History`" inverse="true" lazy="true" fetch="select">
+<key>
+<column name="`from`" not-null="true"/>
+</key>
+<one-to-many class="HistoryP" />
+</set>
+ 
+
+</class>
+</hibernate-mapping>
