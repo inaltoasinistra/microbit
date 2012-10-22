@@ -1,4 +1,4 @@
-package org.silix.the9ull.microbit;
+package org.silix.the9ull.microbit.model;
 
 import java.math.BigDecimal;
 import java.net.ConnectException;

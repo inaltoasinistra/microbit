@@ -1,4 +1,4 @@
-package org.silix.the9ull.microbit;
+package org.silix.the9ull.microbit.model;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;

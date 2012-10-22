@@ -1,0 +1,2 @@
+
+I every *P.java file there is the query to create the relative table

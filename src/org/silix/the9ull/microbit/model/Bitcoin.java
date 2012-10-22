@@ -1,4 +1,4 @@
-package org.silix.the9ull.microbit;
+package org.silix.the9ull.microbit.model;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
 
 import org.stringtree.json.JSONReader;// test only
 import org.stringtree.json.JSONValidatingReader;

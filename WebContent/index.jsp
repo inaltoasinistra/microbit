@@ -13,14 +13,16 @@ ip = request.getRemoteAddr();
 %>
 <%-- Your IP address is <%= ip %> but... who cares?<br/><br/><br/> --%>
 
-<a href="register.jsp">Register</a>
-
-<form name="login" action="login.jsp" method="POST">
-<input type="text" name="id" value="id or deposit address" onclick="this.form.elements[0].value = ''" />
-<input type="password" name="password" value="pwd" onclick="this.form.elements[1].value = ''" />
-<input type="submit" value="Go" />
-</form>
-
+<div align="left">
+	<a href="register.jsp">Register</a>
+	
+	<br />
+	<form name="login" action="login.jsp" method="POST">
+		<input type="text" name="id" value="id or deposit address" onclick="this.form.elements[0].value = ''" />
+		<input type="password" name="password" value="***" onclick="this.form.elements[1].value = ''" />
+		<input type="submit" value="Go" style="visibility:hidden" />
+	</form>
+</div>
 
 </body>
 </html>

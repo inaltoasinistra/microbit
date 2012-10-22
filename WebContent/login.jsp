@@ -10,24 +10,28 @@
 <title>Micro Bit.</title>
 </head>
 <%
-String l = "";
-if(request!=null /*&& request.getMethod()=="POST"*/){
-	l = "wow! un forse login ";
+
+if(request!=null && request.getParameter("id")!=null){
+	int id_user = Integer.parseInt(request.getParameter("id"));
+	/*
 	Enumeration<String> names = request.getHeaderNames();
 	while(names.hasMoreElements()){
 		String name = names.nextElement();
 		out.println(name+" "+request.getHeader(name)+"<br/>");
-	}
+	}*/
 	
 	HttpSession bsession = request.getSession();
 	//bsession.getAttribute("key");
-	//bsession.setAttribute("key",value);
-	out.println(bsession);
+	
+	 
+	bsession.setAttribute("user",104);
+	out.println(bsession.getId());
 }
 
 %>
 <body>
-<a href=".">Return</a><br/>
-<%= l %>
+<a href=".">Home</a><br/>
+<%= request.getParameter("id") %>
+<%= request.getParameter("password") %>
 </body>
 </html>
