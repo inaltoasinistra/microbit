@@ -7,7 +7,7 @@
 <title>Micro Bit.</title>
 </head>
 <body>
-	<a href=".">Home</a>
+	<jsp:include page="header.jsp" />
 <%
 	if(request!=null && request.getParameter("email")!=null) {
 		out.println("<br /> "+request.getParameter("email"));

@@ -1,26 +1,15 @@
 package org.silix.the9ull.microbit.model;
 
 import java.io.UnsupportedEncodingException; 
+import java.math.BigInteger;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest; 
 import java.security.NoSuchAlgorithmException; 
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
  
 public class SHA1 { 
- 
-    private static String convertToHex(byte[] data) { 
-        StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < data.length; i++) { 
-            int halfbyte = (data[i] >>> 4) & 0x0F;
-            int two_halfs = 0;
-            do { 
-                if ((0 <= halfbyte) && (halfbyte <= 9)) 
-                    buf.append((char) ('0' + halfbyte));
-                else 
-                    buf.append((char) ('a' + (halfbyte - 10)));
-                halfbyte = data[i] & 0x0F;
-            } while(two_halfs++ < 1);
-        } 
-        return buf.toString();
-    } 
  
     public static String digest(String text) { 
 	    MessageDigest md;
@@ -30,12 +19,45 @@ public class SHA1 {
 			md.update(text.getBytes("iso-8859-1"), 0, text.length());
 			sha1hash = md.digest();
 			
-		    return convertToHex(sha1hash);
+			return String.format("%x", new BigInteger(1, sha1hash));
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 	    return "";
+    }
+    
+    // return: 40chars String
+    public static String HMAC_digest(String key, String message) {
+
+        SecretKeySpec keySpec = new SecretKeySpec(
+                key.getBytes(),
+                "HmacMD5");
+
+        Mac mac;
+        byte[] rawHmac = null;
+		try {
+			mac = Mac.getInstance("HmacSHA1");
+			mac.init(keySpec);
+			rawHmac = mac.doFinal(message.getBytes());
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        return String.format("%x", new BigInteger(1, rawHmac));
+    }
+    
+    public static void main(String []args){
+    	
+		System.out.println(HMAC_digest("Chiave","Messaggio"));
+		System.out.println(HMAC_digest("Chiave","M"));
+		System.out.println(HMAC_digest("C","Messaggio"));
+		System.out.println(HMAC_digest("Ch","Messaggio"));
+		
     }
 } 

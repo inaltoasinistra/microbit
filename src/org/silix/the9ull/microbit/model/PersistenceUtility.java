@@ -39,13 +39,12 @@ public class PersistenceUtility {
 		
 		user.setEmail(email);
 		user.setFund(new BigDecimal(0.0));
-		user.setPassword(SHA1.digest("Just a second"));
+		user.setPassword("Just a second");
 		id_user = (Integer) session.save(user);
-		user.setPassword(SHA1.digest(password+id_user));
+		user.setPassword(SHA1.HMAC_digest(""+id_user,password));
 		
-		
+		//deposit address
 		String daddress = bc.getnewaddress("user"+id_user);
-		
 		
 		user.setDeposit_address(daddress);
 		session.update(user);

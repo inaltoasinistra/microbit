@@ -4,7 +4,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 
-<hibernate-mapping package="org.silix.the9ull.microbit">
+<hibernate-mapping package="org.silix.the9ull.microbit.model">
 <class name="UserP" table="User">
 <id name="id" type="int" column="`id`" >
 <generator class="identity"/>
