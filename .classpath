@@ -22,5 +22,6 @@
 	<classpathentry kind="lib" path="/home/jonathan/Dropbox/jonathan/Uni/Web architectures/Jar project/jsp-api-2.1.jar"/>
 	<classpathentry kind="lib" path="/home/jonathan/Dropbox/jonathan/Uni/Web architectures/Jar project/servlet-api.jar"/>
 	<classpathentry kind="lib" path="/home/jonathan/Dropbox/jonathan/Uni/Web architectures/Jar project/javax.ejb.jar"/>
+	<classpathentry kind="lib" path="/home/jonathan/Dropbox/jonathan/Uni/Web architectures/Jar project/jnpserver.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
