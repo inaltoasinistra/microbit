@@ -1,4 +1,4 @@
 microbit
 ========
 
-bitcoin-qt -testnet
+bitcoin-qt -testnet -server
