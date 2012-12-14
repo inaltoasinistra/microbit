@@ -1,4 +1,4 @@
-package org.silix.the9ull.microbit.control;
+package org.silix.the9ull.microbit.controlinterface;
 
 import java.util.regex.Pattern;
 
@@ -14,6 +14,8 @@ public class Login {
 
 
 	public void setIdOrAddress(String idOrAddress) {
+		id = -1;
+		address = null;
 		if(Pattern.matches("^\\d*$", idOrAddress)){
 			id = Integer.parseInt(idOrAddress);
 			
@@ -61,14 +63,8 @@ public class Login {
 
 
 	public boolean isLogged() {
+		//So, I should call EJB and verify things...
 		return false;
-	}
-
-
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

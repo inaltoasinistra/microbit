@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Micro Bit.</title>
+<title>Micro Bi(t).</title>
 </head>
 <%--
 
@@ -33,7 +33,7 @@ if(request!=null && request.getParameter("id")!=null){
 <body>
 <jsp:include page="header.jsp" />
 
-<jsp:useBean id="login" class="org.silix.the9ull.microbit.control.Login" />
+<jsp:useBean id="login" class="org.silix.the9ull.microbit.controlinterface.Login" />
 
 <jsp:setProperty name="login" property="idOrAddress" param="id" />
 <jsp:setProperty name="login" property="password" param="password" />

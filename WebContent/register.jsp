@@ -4,24 +4,31 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Micro Bit.</title>
+<title>Micro Bi(t).</title>
 </head>
+
+<jsp:useBean id="register" class="org.silix.the9ull.microbit.controlinterface.Register" />
+
+
 <body>
 	<jsp:include page="header.jsp" />
 <%
 	if(request!=null && request.getParameter("email")!=null) {
-		out.println("<br /> "+request.getParameter("email"));
-		out.println(request.getParameter("password").equals(request.getParameter("confirm")));
+		%>
+		<jsp:setProperty name="register" property="email" param="email" />
+		<jsp:setProperty name="register" property="password" param="password" />
+		<jsp:setProperty name="register" property="confirm" param="confirm" />
+		
+		<jsp:getProperty name="register" property="registered" />
+		<%
+		
+		/*if(registered){
+			%> REGISTRATO!! <%
+		}*/
 	}
 	else {
 %>
-
-	<form name="register" action="register.jsp" method="POST">
-		<input type="email" name="email" value="you@some.domain" onclick="this.form.elements[0].value = ''" />
-		<input type="password" name="password" value="***" onclick="this.form.elements[1].value = ''" />
-		<input type="password" name="confirm" value="***" onclick="this.form.elements[2].value = ''" />
-		<input type="submit" value="Register" style="visibility:hidden" />
-	</form>
+	<jsp:include page="register-form.jsp" />
 <%
 	}
 %>
