@@ -1,14 +1,17 @@
 package org.silix.the9ull.microbit.controlinterface;
 
 public class Register {
-	
+
 	private String email;
 	private String password;
 	private String confirm;
 	
-	Register(){
+	private boolean registered = false;
+	
+	public Register() {
 	}
 
+	
 	public String getEmail() {
 		return email;
 	}
@@ -34,10 +37,16 @@ public class Register {
 	}
 	
 	public boolean isRegistered(){
-		return false;
+		// EJB Client!
+		if(!registered){
+			
+			
+			registered = true;
+		}
+		return registered;
 	}
 	
-	public void setRegistered() {
+	public void setRegistered(boolean registered) {
 		//nothing to do here
 	}
 }
