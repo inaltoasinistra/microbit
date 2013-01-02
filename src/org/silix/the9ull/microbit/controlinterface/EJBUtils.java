@@ -7,12 +7,16 @@ import javax.naming.NamingException;
 import org.silix.the9ull.microbit.control.GetInfo;
 
 public class EJBUtils {
-	static Context context = EJBContainer.createEJBContainer().getContext();
+	static EJBContainer container;
+	
+	static {
+		container = EJBContainer.createEJBContainer();
+	}
 	
 	static private Object lookup(String path) {
 		Object o = null;
 		try {
-			o = context.lookup(path);
+			o = container.getContext().lookup(path);
 		} catch (NamingException e) {
 			e.printStackTrace();
 			return null;
@@ -20,11 +24,15 @@ public class EJBUtils {
 		return o;		
 	}
 	
-	static public GetInfo getGetInfo() {
+	static public GetInfo getGetInfo() throws NamingException {
 		GetInfo gi = (GetInfo) lookup("java:global/Microbi/GetInfo");
+		assert(gi instanceof GetInfo);
 		if(gi==null)
 			assert(false); //bug
 		return gi;
 	}
 
+	static void containerClose() {
+		container.close();
+	}
 }
