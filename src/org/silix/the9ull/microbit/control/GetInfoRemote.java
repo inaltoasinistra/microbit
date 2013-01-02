@@ -1,6 +1,7 @@
 package org.silix.the9ull.microbit.control;
 
 import javax.ejb.Remote;
+import javax.ejb.Stateless;
 
 @Remote
 public interface GetInfoRemote {

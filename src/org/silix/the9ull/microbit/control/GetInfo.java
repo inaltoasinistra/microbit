@@ -2,9 +2,9 @@ package org.silix.the9ull.microbit.control;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.Remote;
 
 @Stateless
-@LocalBean
 public class GetInfo implements GetInfoRemote {
 
 	@Override
