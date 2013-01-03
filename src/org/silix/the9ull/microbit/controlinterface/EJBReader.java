@@ -6,7 +6,7 @@ import org.silix.the9ull.microbit.control.GetInfoRemote;
 
 public class EJBReader {
 
-	@EJB
+	@EJB(mappedName="java:global/Microbi25/GetInfo")
 	private GetInfoRemote gir;
 
 	public GetInfoRemote getGir() {

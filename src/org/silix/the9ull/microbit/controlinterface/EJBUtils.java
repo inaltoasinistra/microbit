@@ -1,16 +1,23 @@
 package org.silix.the9ull.microbit.controlinterface;
 
+import java.util.Properties;
+
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
 import javax.naming.NamingException;
+
 
 import org.silix.the9ull.microbit.control.GetInfo;
 
 public class EJBUtils {
 	static EJBContainer container;
+	static Properties properties;
 	
 	static {
-		container = EJBContainer.createEJBContainer();
+		properties = new Properties();
+		properties.setProperty(EJBContainer.PROVIDER, "javax.ejb.spi.EJBContainerProvider");
+        //System.out.println("PROVIDER: "+EJBContainer.PROVIDER);
+		container = EJBContainer.createEJBContainer(properties);
 	}
 	
 	static private Object lookup(String path) {
@@ -25,7 +32,7 @@ public class EJBUtils {
 	}
 	
 	static public GetInfo getGetInfo() throws NamingException {
-		GetInfo gi = (GetInfo) lookup("java:global/Microbi/GetInfo");
+		GetInfo gi = (GetInfo) lookup("java:global/Microbi25/GetInfo");
 		assert(gi instanceof GetInfo);
 		if(gi==null)
 			assert(false); //bug

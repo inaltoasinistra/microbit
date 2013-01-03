@@ -28,5 +28,6 @@
 	<classpathentry kind="lib" path="/home/jonathan/Dropbox/jonathan/Uni/Web architectures/Jar project/mysql-connector-java-5.1.22-bin.jar"/>
 	<classpathentry kind="lib" path="/home/jonathan/Dropbox/jonathan/Uni/Web architectures/Jar project/servlet-api.jar"/>
 	<classpathentry kind="lib" path="/home/jonathan/Dropbox/jonathan/Uni/Web architectures/Jar project/stringtree-json-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/jonathan/Dropbox/jonathan/Uni/Web architectures/Jar project/jboss-ejb-api_3.1_spec.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
