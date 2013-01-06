@@ -5,6 +5,7 @@ import javax.ejb.Stateless;
 import javax.ejb.Remote;
 
 @Stateless
+@LocalBean
 public class GetInfo implements GetInfoRemote {
 
 	@Override

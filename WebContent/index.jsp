@@ -23,7 +23,7 @@ System.out.println(gi.valueBtcUsd());
 System.out.println(gi.numberOfUsers());
 
 ip = request.getRemoteAddr();
-gi = new GetInfo(); //EJBUtils.getGetInfo();
+gi = EJBUtils.getGetInfo();
 nusers = gi.numberOfUsers();
 usd = gi.valueBtcUsd();
 eur = gi.valueBtcEur();

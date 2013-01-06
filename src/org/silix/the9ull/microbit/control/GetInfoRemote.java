@@ -1,5 +1,6 @@
 package org.silix.the9ull.microbit.control;
 
+import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 
@@ -10,3 +11,4 @@ public interface GetInfoRemote {
     public double valueBtcUsd();
     public double valueBtcEur();
 }
+

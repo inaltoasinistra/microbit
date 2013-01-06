@@ -2,6 +2,8 @@ package org.silix.the9ull.microbit.controlinterface;
 
 import java.util.regex.Pattern;
 
+// Java Bean
+
 public class Login {
 
 	private String idOrAddress;

@@ -15,9 +15,14 @@ public class EJBUtils {
 	
 	static {
 		properties = new Properties();
-		properties.setProperty(EJBContainer.PROVIDER, "javax.ejb.spi.EJBContainerProvider");
+		//properties.setProperty(EJBContainer.PROVIDER, "javax.ejb.spi.EJBContainerProvider");
+		//properties.setProperty("openejb.embedded.remotable","true");
         //System.out.println("PROVIDER: "+EJBContainer.PROVIDER);
-		container = EJBContainer.createEJBContainer(properties);
+		container = EJBContainer.createEJBContainer();
+	}
+	
+	public EJBUtils() {
+		
 	}
 	
 	static private Object lookup(String path) {
