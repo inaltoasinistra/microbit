@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@page import="org.silix.the9ull.microbit.control.GetInfo"%>
+<%@page import="org.silix.the9ull.microbit.control.GetInfoRemote"%>
 <%@page import="org.silix.the9ull.microbit.controlinterface.EJBUtils"%>
+<%@page import="javax.naming.Context"%>
+<%@page import="javax.naming.InitialContext"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -12,23 +14,30 @@
 <%! String ip; %>
 <%! long nusers; %>
 <%! double usd, eur; %>
-<%! GetInfo gi; %>
+<%! GetInfoRemote gi; %>
 <body>
+<jsp:include page="header.jsp" />
 <%
 
-GetInfo gi = EJBUtils.getGetInfo();
+//GetInfoRemote gi = EJBUtils.getGetInfo();
 
-System.out.println(gi.valueBtcEur());
-System.out.println(gi.valueBtcUsd());
-System.out.println(gi.numberOfUsers());
+//System.out.println(gi.valueBtcEur());
+//System.out.println(gi.valueBtcUsd());
+//System.out.println(gi.numberOfUsers());
 
 ip = request.getRemoteAddr();
-gi = EJBUtils.getGetInfo();
-nusers = gi.numberOfUsers();
+//gi = EJBUtils.getGetInfo();
+//nusers = gi.numberOfUsers();
+
+Context context = new InitialContext(); 
+GetInfoRemote gi = (GetInfoRemote)context.lookup("java:global/Microbi25/GetInfo");
+
 usd = gi.valueBtcUsd();
 eur = gi.valueBtcEur();
+
+
 %>
- Your IP address is <%= ip %> but... who cares?<br/><br/><br/>
+<!--Your IP address is <%= ip %> but... who cares?<br/><br/><br/>-->
 
 <div align="left">
 	<a href="register.jsp">Register</a> 1BTC = <%= usd %>USD; 1BTC = <%= eur %>EUR; Users = <%= nusers %>

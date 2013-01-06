@@ -1,24 +1,21 @@
 package org.silix.the9ull.microbit.controlinterface;
 
-import java.util.Properties;
-
-import javax.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-
-import org.silix.the9ull.microbit.control.GetInfo;
+import org.silix.the9ull.microbit.control.GetInfoRemote;
 
 public class EJBUtils {
-	static EJBContainer container;
-	static Properties properties;
+	static Context context;
 	
 	static {
-		properties = new Properties();
-		//properties.setProperty(EJBContainer.PROVIDER, "javax.ejb.spi.EJBContainerProvider");
-		//properties.setProperty("openejb.embedded.remotable","true");
-        //System.out.println("PROVIDER: "+EJBContainer.PROVIDER);
-		container = EJBContainer.createEJBContainer();
+		try {
+			context = new InitialContext();
+		} catch (NamingException e) {
+			e.printStackTrace();
+			assert(false);
+		}
 	}
 	
 	public EJBUtils() {
@@ -28,7 +25,7 @@ public class EJBUtils {
 	static private Object lookup(String path) {
 		Object o = null;
 		try {
-			o = container.getContext().lookup(path);
+			o = context.lookup(path);
 		} catch (NamingException e) {
 			e.printStackTrace();
 			return null;
@@ -36,15 +33,11 @@ public class EJBUtils {
 		return o;		
 	}
 	
-	static public GetInfo getGetInfo() throws NamingException {
-		GetInfo gi = (GetInfo) lookup("java:global/Microbi25/GetInfo");
-		assert(gi instanceof GetInfo);
-		if(gi==null)
-			assert(false); //bug
+	static public GetInfoRemote getGetInfo() throws NamingException {
+		GetInfoRemote gi = (GetInfoRemote) lookup("java:global/Microbi25/GetInfo");
+		assert(gi instanceof GetInfoRemote);
+		assert(gi!=null);
 		return gi;
 	}
 
-	static void containerClose() {
-		container.close();
-	}
 }
