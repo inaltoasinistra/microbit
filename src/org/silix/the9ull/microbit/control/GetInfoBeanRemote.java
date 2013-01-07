@@ -5,7 +5,7 @@ import javax.ejb.Remote;
 import javax.ejb.Stateless;
 
 @Remote
-public interface GetInfoRemote {
+public interface GetInfoBeanRemote {
 	
 	public long numberOfUsers();
     public double valueBtcUsd();

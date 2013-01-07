@@ -1,8 +1,8 @@
 package org.silix.the9ull.microbit.controlinterface;
 
-public class Transaction {
+public class TransactionJB {
 
-	public Transaction() {
+	public TransactionJB() {
 	}
 	
 	

@@ -5,7 +5,7 @@ import javax.inject.Named;
 
 @Stateless
 @Named
-public class GetInfo implements GetInfoRemote {
+public class GetInfoBean implements GetInfoBeanRemote {
 
 	@Override
 	public long numberOfUsers() {

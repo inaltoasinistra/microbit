@@ -8,7 +8,7 @@
 <title>Micro Bi(t).</title>
 </head>
 
-<jsp:useBean id="register" class="org.silix.the9ull.microbit.controlinterface.Register" />
+<jsp:useBean id="register" class="org.silix.the9ull.microbit.controlinterface.RegisterJB" />
 
 <body>
 	<jsp:include page="header.jsp" />

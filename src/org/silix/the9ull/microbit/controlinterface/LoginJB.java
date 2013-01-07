@@ -4,14 +4,14 @@ import java.util.regex.Pattern;
 
 // Java Bean
 
-public class Login {
+public class LoginJB {
 
 	private String idOrAddress;
 	private int id;
 	private String address;
 	private String password;
 	
-	public Login() {
+	public LoginJB() {
 	}
 
 

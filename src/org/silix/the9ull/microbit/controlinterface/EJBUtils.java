@@ -4,7 +4,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.silix.the9ull.microbit.control.GetInfoRemote;
+import org.silix.the9ull.microbit.control.GetInfoBeanRemote;
+import org.silix.the9ull.microbit.control.RegisterBeanRemote;
 
 public class EJBUtils {
 	static Context context;
@@ -33,11 +34,16 @@ public class EJBUtils {
 		return o;		
 	}
 	
-	static public GetInfoRemote getGetInfo() throws NamingException {
-		GetInfoRemote gi = (GetInfoRemote) lookup("java:global/Microbi25/GetInfo");
-		assert(gi instanceof GetInfoRemote);
-		assert(gi!=null);
-		return gi;
+	static public GetInfoBeanRemote getGetInfo() throws NamingException {
+		GetInfoBeanRemote o = (GetInfoBeanRemote) lookup("java:global/Microbi25/GetInfo");
+		assert(o instanceof GetInfoBeanRemote);
+		assert(o!=null);
+		return o;
 	}
-
+	static public RegisterBeanRemote getregister() throws NamingException {
+		RegisterBeanRemote o = (RegisterBeanRemote) lookup("java:global/Microbi25/Register");
+		assert(o instanceof RegisterBeanRemote);
+		assert(o!=null);
+		return o;
+	}
 }

@@ -1,6 +1,6 @@
 package org.silix.the9ull.microbit.controlinterface;
 
-public class Register {
+public class RegisterJB {
 
 	private String email;
 	private String password;
@@ -8,7 +8,7 @@ public class Register {
 	
 	private boolean registered = false;
 	
-	public Register() {
+	public RegisterJB() {
 	}
 
 	

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@page import="org.silix.the9ull.microbit.control.GetInfoRemote"%>
+<%@page import="org.silix.the9ull.microbit.control.GetInfoBeanRemote"%>
 <%@page import="org.silix.the9ull.microbit.controlinterface.EJBUtils"%>
 <%@page import="javax.naming.Context"%>
 <%@page import="javax.naming.InitialContext"%>
@@ -11,15 +11,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Micro Bi(t). Home</title>
 </head>
-<%! String ip; %>
-<%! long nusers; %>
-<%! double usd, eur; %>
-<%! GetInfoRemote gi; %>
+<%!String ip;%>
+<%!long nusers;%>
+<%!double usd, eur;%>
+<%!GetInfoBeanRemote gi;%>
 <body>
 <jsp:include page="header.jsp" />
 <%
-
-//GetInfoRemote gi = EJBUtils.getGetInfo();
+	//GetInfoRemote gi = EJBUtils.getGetInfo();
 
 //System.out.println(gi.valueBtcEur());
 //System.out.println(gi.valueBtcUsd());
@@ -30,12 +29,10 @@ ip = request.getRemoteAddr();
 //nusers = gi.numberOfUsers();
 
 Context context = new InitialContext(); 
-GetInfoRemote gi = (GetInfoRemote)context.lookup("java:global/Microbi25/GetInfo");
+GetInfoBeanRemote gi = (GetInfoBeanRemote)context.lookup("java:global/Microbi25/GetInfo");
 
 usd = gi.valueBtcUsd();
 eur = gi.valueBtcEur();
-
-
 %>
 <!--Your IP address is <%= ip %> but... who cares?<br/><br/><br/>-->
 

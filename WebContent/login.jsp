@@ -33,7 +33,7 @@ if(request!=null && request.getParameter("id")!=null){
 <body>
 <jsp:include page="header.jsp" />
 
-<jsp:useBean id="login" class="org.silix.the9ull.microbit.controlinterface.Login" />
+<jsp:useBean id="login" class="org.silix.the9ull.microbit.controlinterface.LoginJB" />
 
 <jsp:setProperty name="login" property="idOrAddress" param="id" />
 <jsp:setProperty name="login" property="password" param="password" />
