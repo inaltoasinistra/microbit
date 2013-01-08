@@ -2,6 +2,8 @@ package org.silix.the9ull.microbit.control;
 
 import javax.ejb.Stateless;
 import javax.inject.Named;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -14,9 +16,11 @@ import org.silix.the9ull.microbit.model.UserP;
 public class GetInfoBean implements GetInfoBeanRemote {
 	
 	private Session session;
+	private MtGoxInfo mtgox;
 	
 	public GetInfoBean() {
 		session = SingletonSessionFactory.getSession();
+		mtgox = new MtGoxInfo(10*60);
 	}
 
 	@Override
@@ -29,16 +33,21 @@ public class GetInfoBean implements GetInfoBeanRemote {
 	}
 
 	@Override
-	public double valueBtcUsd() {
+	public BigDecimal valueBtcUsd() {
 		// TODO Auto-generated method stub
 		// External call (cache value into db? Good idea!)
-		return 12.84;
+		if(!mtgox.update("USD")){
+			System.out.println("MtGox API problem");
+		}
+		return mtgox.getUsd();
 	}
 
 	@Override
-	public double valueBtcEur() {
-		// TODO Auto-generated method stub
-		return 10.10;
+	public BigDecimal valueBtcEur() {
+		if(!mtgox.update("EUR")){
+			System.out.println("MtGox API problem");
+		}
+		return mtgox.getEur();
 	}
 
 	@Override

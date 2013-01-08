@@ -1,5 +1,7 @@
 package org.silix.the9ull.microbit.controlinterface;
 
+import java.math.BigDecimal;
+
 import org.silix.the9ull.microbit.control.GetInfoBeanRemote;
 
 public class GetInfoJB {
@@ -17,18 +19,18 @@ public class GetInfoJB {
 	public void setGib(GetInfoBeanRemote gib) {
 	}
 
-	public double getUsd() {
+	public BigDecimal getUsd() {
 		return gib.valueBtcUsd();
 	}
 
-	public void setUsd(double usd) {
+	public void setUsd(BigDecimal usd) {
 	}
 
-	public double getEur() {
+	public BigDecimal getEur() {
 		return gib.valueBtcEur();
 	}
 
-	public void setEur(double eur) {
+	public void setEur(BigDecimal eur) {
 	}
 
 	public long getNusers() {

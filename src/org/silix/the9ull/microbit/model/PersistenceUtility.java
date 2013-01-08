@@ -8,9 +8,6 @@ import org.hibernate.Session;
 
 public class PersistenceUtility {
 
-	static {
-	}
-	
 	private PersistenceUtility() {
 	}
 	
@@ -53,6 +50,4 @@ public class PersistenceUtility {
 		session.update(user);
 		return user;
 	}
-
-
 }

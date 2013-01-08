@@ -34,8 +34,8 @@
 
 <div align="left">
 	<a href="register.jsp">Register</a>
-	1BTC = <jsp:getProperty name="info" property="usd" />USD;
-	1BTC = <jsp:getProperty name="info" property="eur" />EUR;
+	1BTC = <jsp:getProperty name="info" property="usd" /> USD;
+	1BTC = <jsp:getProperty name="info" property="eur" /> EUR;
 	Users = <jsp:getProperty name="info" property="nusers" /> 
 	
 	<br />
