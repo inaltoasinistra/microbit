@@ -1,4 +1,7 @@
 package org.silix.the9ull.microbit.model;
+
+
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
@@ -31,5 +34,12 @@ public class SingletonSessionFactory {
 			
 		}
 		return sessionFactory;
+	}
+	
+	public static Session getSession(){
+		return getSessionFactory().openSession();
+	}
+	public static void closeSession(Session session){
+		session.close();
 	}
 }

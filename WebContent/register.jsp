@@ -15,15 +15,20 @@
 <%
 	if(request!=null && request.getParameter("email")!=null) {
 		%>
-		<!--<jsp:setProperty name="register" property="email" param="email" />
-		<jsp:setProperty name="register" property="password" param="password" />
-		<jsp:setProperty name="register" property="confirm" param="confirm" />-->
-		
 		<jsp:setProperty name="register" property="*" />
 		<%
 		
 		if(register.isRegistered()){
-			%> REGISTRATO!! <%
+			%><b>User registered.</b><br />  
+			Deposit address: <jsp:getProperty name="register" property="new_deposit_address" /><br />
+			User id: <jsp:getProperty name="register" property="new_id" /><br />
+			Email: <jsp:getProperty name="register" property="email" /><br />
+			<%
+		}
+		if(register.getError()==1){
+			//password non confermata
+			%>Password not confirmed. Try again: <br />
+			<jsp:include page="register-form.jsp" /><%
 		}
 	}
 	else {

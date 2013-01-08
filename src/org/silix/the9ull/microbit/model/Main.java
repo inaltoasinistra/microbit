@@ -3,11 +3,7 @@ package org.silix.the9ull.microbit.model;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.ConnectException;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -134,7 +130,7 @@ public class Main {
 		session.close();
 		
 		try {
-			Bitcoin bitcoin = new Bitcoin();
+			Bitcoin bitcoin = new Bitcoin(false);
 		} catch (ConnectException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

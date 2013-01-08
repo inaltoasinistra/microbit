@@ -13,7 +13,7 @@ public class Test {
 		GetInfoBean gi = null;
 
         try {
-			gi = (GetInfoBean) context.lookup("java:global/Microbi25/GetInfo");
+			gi = (GetInfoBean) context.lookup("java:global/Microbi25/GetInfoBean");
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}

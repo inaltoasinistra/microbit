@@ -32,7 +32,7 @@ public class Transactions {
 	private Transactions() throws IOException {
 		
 		Bitcoin.readRpcCredentials();
-		bc = new Bitcoin();
+		bc = new Bitcoin(false);
 		
 	}
 	

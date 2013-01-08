@@ -29,7 +29,7 @@ ip = request.getRemoteAddr();
 //nusers = gi.numberOfUsers();
 
 Context context = new InitialContext(); 
-GetInfoBeanRemote gi = (GetInfoBeanRemote)context.lookup("java:global/Microbi25/GetInfo");
+GetInfoBeanRemote gi = (GetInfoBeanRemote)context.lookup("java:global/Microbi25/GetInfoBean");
 
 usd = gi.valueBtcUsd();
 eur = gi.valueBtcEur();

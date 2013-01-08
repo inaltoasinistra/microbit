@@ -34,14 +34,14 @@ public class EJBUtils {
 		return o;		
 	}
 	
-	static public GetInfoBeanRemote getGetInfo() throws NamingException {
-		GetInfoBeanRemote o = (GetInfoBeanRemote) lookup("java:global/Microbi25/GetInfo");
+	static public GetInfoBeanRemote getGetInfo() {
+		GetInfoBeanRemote o = (GetInfoBeanRemote) lookup("java:global/Microbi25/GetInfoBean");
 		assert(o instanceof GetInfoBeanRemote);
 		assert(o!=null);
 		return o;
 	}
-	static public RegisterBeanRemote getregister() throws NamingException {
-		RegisterBeanRemote o = (RegisterBeanRemote) lookup("java:global/Microbi25/Register");
+	static public RegisterBeanRemote getRegister() {
+		RegisterBeanRemote o = (RegisterBeanRemote) lookup("java:global/Microbi25/RegisterBean");
 		assert(o instanceof RegisterBeanRemote);
 		assert(o!=null);
 		return o;

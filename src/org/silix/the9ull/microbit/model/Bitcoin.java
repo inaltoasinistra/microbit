@@ -24,15 +24,25 @@ public class Bitcoin {
 
 	static String rpcuser;
 	static String rpcpassword;
-	private int minconf = 2;
 	static private BigDecimal fee = null; 
 	
-	
-	ServiceProxy proxy;
-	
-	public Bitcoin() throws ConnectException {
+	private int minconf = 2;
+	private ServiceProxy proxy;
+
+	public Bitcoin(boolean authentication) throws ConnectException {
 		
-		//System.out.println(rpcuser+" "+rpcpassword);
+		System.out.println("new Bitcoin()");
+	
+		if(authentication)
+			try {
+				if(!Bitcoin.readRpcCredentials()){
+					System.out.println("Credential not found");
+				}
+			} catch (IOException e) {
+				System.out.println("Credential not found");
+			}
+		
+		System.out.println("Cred:"+rpcuser+" "+rpcpassword);
 		
 		// Set Authenticator
 		Authenticator.setDefault(new Authenticator() {
@@ -173,7 +183,7 @@ public class Bitcoin {
 		
 		Bitcoin bc = null;
 		try {
-			bc = new Bitcoin();
+			bc = new Bitcoin(false);
 		} catch (ConnectException e) {
 			System.out.println("Bitcoin server connection problem");
 			return;
