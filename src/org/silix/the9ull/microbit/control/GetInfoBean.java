@@ -2,6 +2,7 @@ package org.silix.the9ull.microbit.control;
 
 import javax.ejb.Stateless;
 import javax.inject.Named;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -21,7 +22,10 @@ public class GetInfoBean implements GetInfoBeanRemote {
 	@Override
 	public long numberOfUsers() {
 		Query q = session.createQuery("select count(usr) from UserP usr");
-		return (Long) q.list().get(0);
+		List<Long> l = (List<Long>) q.list();
+		if(l.size()>0)
+			return l.get(0);
+		return -1;
 	}
 
 	@Override
@@ -40,15 +44,19 @@ public class GetInfoBean implements GetInfoBeanRemote {
 	@Override
 	public int getIdFromAddress(String address) {
 		Query q = session.createQuery("from UserP usr where usr.deposit_address="+address);
-		UserP u = (UserP) q.list().get(0);
-		return u.getId();
+		List<UserP> l = (List<UserP>) q.list();
+		if(l.size()>0)
+			return l.get(0).getId();
+		return -1;
 	}
 
 	@Override
 	public String getAddressFromId(int id) {
 		Query q = session.createQuery("from UserP usr where usr.id="+id);
-		UserP u = (UserP) q.list().get(0);
-		return u.getDeposit_address();
+		List<UserP> l = (List<UserP>) q.list();
+		if(l.size()>0)
+			return l.get(0).getDeposit_address();
+		return "";
 	}
 	
 }
