@@ -24,20 +24,19 @@
 //System.out.println(gi.valueBtcUsd());
 //System.out.println(gi.numberOfUsers());
 
-ip = request.getRemoteAddr();
+//ip = request.getRemoteAddr();
 //gi = EJBUtils.getGetInfo();
 //nusers = gi.numberOfUsers();
-
-Context context = new InitialContext(); 
-GetInfoBeanRemote gi = (GetInfoBeanRemote)context.lookup("java:global/Microbi25/GetInfoBean");
-
-usd = gi.valueBtcUsd();
-eur = gi.valueBtcEur();
 %>
 <!--Your IP address is <%= ip %> but... who cares?<br/><br/><br/>-->
 
+<jsp:useBean id="info" class="org.silix.the9ull.microbit.controlinterface.GetInfoJB" />
+
 <div align="left">
-	<a href="register.jsp">Register</a> 1BTC = <%= usd %>USD; 1BTC = <%= eur %>EUR; Users = <%= nusers %>
+	<a href="register.jsp">Register</a>
+	1BTC = <jsp:getProperty name="info" property="usd" />USD;
+	1BTC = <jsp:getProperty name="info" property="eur" />EUR;
+	Users = <jsp:getProperty name="info" property="nusers" /> 
 	
 	<br />
 	<form name="login" action="login.jsp" method="POST">
