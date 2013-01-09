@@ -1,6 +1,10 @@
 package org.silix.the9ull.microbit.controlinterface;
 
+import java.rmi.RemoteException;
 import java.util.regex.Pattern;
+
+import org.silix.the9ull.microbit.control.GetInfoBeanRemote;
+import org.silix.the9ull.microbit.control.UserBeanRemote;
 
 // Java Bean
 
@@ -10,6 +14,9 @@ public class LoginJB {
 	private int id;
 	private String address;
 	private String password;
+	private boolean logged = false;
+	
+	private UserBeanRemote ub; //The Bean
 	
 	public LoginJB() {
 	}
@@ -63,10 +70,40 @@ public class LoginJB {
 		this.password = password;
 	}
 
-
+	public void setLogged(boolean logged) {
+		ub = EJBUtils.getUser();
+		
+		GetInfoBeanRemote gib = EJBUtils.getGetInfo();
+		
+		if(logged){
+			try {
+				if(this.getId() == -1){
+					this.logged = ub.login(this.getAddress(), this.getPassword());
+					this.setId(gib.getIdFromAddress(this.getAddress()));
+				} else {
+					this.logged = ub.login(this.getId(), this.getPassword());
+					this.setAddress(gib.getAddressFromId(this.getId()));
+				}
+				
+			} catch (RemoteException e) {
+				System.out.println("EJB server problem.");
+				e.printStackTrace();
+			}	
+		}
+		else {
+			System.out.println("LoginJB: Logout");
+			try {
+				ub.logout();
+				this.logged = false;
+			} catch (RemoteException e) {
+				System.out.println("EJB server problem.");
+				e.printStackTrace();	
+			}
+		}
+	}
+	
 	public boolean isLogged() {
-		//So, I should call EJB and verify things...
-		return false;
+		return logged;
 	}
 
 }
