@@ -56,7 +56,8 @@ public class Bitcoin {
 	}
 	
 	boolean validateaddress(String address) {
-		HashMap<String,Object> result = (HashMap) proxy.call("validateaddress",address);
+		@SuppressWarnings("unchecked")
+		HashMap<String,Object> result = (HashMap<String,Object>) proxy.call("validateaddress",address);
 		//System.out.println(result.toString());
 		//System.out.println(""+result.get("isvalid"));
 		

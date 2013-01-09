@@ -76,14 +76,18 @@ public class LoginJB {
 		GetInfoBeanRemote gib = EJBUtils.getGetInfo();
 		
 		if(logged){
+			if(this.getId() == -1){
+				this.setId(gib.getIdFromAddress(this.getAddress()));
+			} else {
+				this.setAddress(gib.getAddressFromId(this.getId()));
+			}
 			try {
-				if(this.getId() == -1){
-					this.logged = ub.login(this.getAddress(), this.getPassword());
-					this.setId(gib.getIdFromAddress(this.getAddress()));
-				} else {
-					this.logged = ub.login(this.getId(), this.getPassword());
-					this.setAddress(gib.getAddressFromId(this.getId()));
-				}
+				this.logged = ub.login(this.getId(), this.getPassword());
+					
+				System.out.println("id "+this.id);
+				System.out.println("address "+this.address);
+				
+				System.out.println("Logged: "+this.logged);
 				
 			} catch (RemoteException e) {
 				System.out.println("EJB server problem.");

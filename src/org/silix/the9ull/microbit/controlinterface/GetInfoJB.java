@@ -20,6 +20,10 @@ public class GetInfoJB {
 	}
 
 	public BigDecimal getUsd() {
+		if(gib==null){
+			System.out.println("Error: gib not defined");
+			return new BigDecimal(0);
+		}
 		return gib.valueBtcUsd();
 	}
 
@@ -27,6 +31,10 @@ public class GetInfoJB {
 	}
 
 	public BigDecimal getEur() {
+		if(gib==null){
+			System.out.println("Error: gib not defined");
+			return new BigDecimal(0);
+		}
 		return gib.valueBtcEur();
 	}
 

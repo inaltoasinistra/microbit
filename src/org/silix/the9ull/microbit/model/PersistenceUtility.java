@@ -30,6 +30,7 @@ public class PersistenceUtility {
 	}
 	
 	public static UserP newUser(String email, String password, Session session) throws ConnectException {
+		// TODO: move this code out of here
 		int id_user;
 		Bitcoin bc = new Bitcoin(true);
 		UserP user = new UserP();
