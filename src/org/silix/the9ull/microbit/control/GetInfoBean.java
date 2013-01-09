@@ -26,6 +26,7 @@ public class GetInfoBean implements GetInfoBeanRemote {
 	@Override
 	public long numberOfUsers() {
 		Query q = session.createQuery("select count(usr) from UserP usr");
+		@SuppressWarnings("unchecked")
 		List<Long> l = (List<Long>) q.list();
 		if(l.size()>0)
 			return l.get(0);
