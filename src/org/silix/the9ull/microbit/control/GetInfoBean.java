@@ -52,7 +52,7 @@ public class GetInfoBean implements GetInfoBeanRemote {
 
 	@Override
 	public int getIdFromAddress(String address) {
-		Query q = session.createQuery("from UserP usr where usr.deposit_address="+address);
+		Query q = session.createQuery("from UserP usr where usr.deposit_address='"+address+"'");
 		List<UserP> l = (List<UserP>) q.list();
 		if(l.size()>0)
 			return l.get(0).getId();

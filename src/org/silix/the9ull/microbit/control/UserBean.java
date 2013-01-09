@@ -2,19 +2,30 @@ package org.silix.the9ull.microbit.control;
 
 import java.rmi.RemoteException;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.ejb.Handle;
+import javax.ejb.PostActivate;
+import javax.ejb.PrePassivate;
 import javax.ejb.Remove;
 import javax.ejb.RemoveException;
 import javax.ejb.Stateful;
 import javax.inject.Named;
 
+import org.hibernate.ObjectNotFoundException;
+import org.hibernate.Session;
+import org.silix.the9ull.microbit.model.SHA1;
+import org.silix.the9ull.microbit.model.SingletonSessionFactory;
+import org.silix.the9ull.microbit.model.UserP;
+
 @Stateful
 @Named
 public class UserBean implements UserBeanRemote {
 
-	private int id;
+	private Session session;
+	private UserP user;
 	
 	@Override
 	public EJBHome getEJBHome() throws RemoteException {
@@ -48,23 +59,34 @@ public class UserBean implements UserBeanRemote {
 
 	@Override
 	public boolean login(int id, String password) throws RemoteException {
-		this.id = id;
-		return true;
-	}
-
-	@Override
-	public boolean login(String address, String password)
-			throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			user = (UserP) session.load(UserP.class,id);
+			// Password check
+			return user.getPassword().equals(SHA1.HMAC_digest(""+id,password));
+		} catch(ObjectNotFoundException e){
+			System.out.println("login: User not found");
+			return false;
+		}
+		
 	}
 
 	@Override
 	@Remove
 	public void logout() throws RemoteException {
-		// TODO Auto-generated method stub
-		
+		user = null;
 	}
 
+	@PostConstruct
+	@PostActivate
+	public void creation() {
+		System.out.println("UserBean: creation && attivation");
+		session = SingletonSessionFactory.getSession();
+	}
+	@PrePassivate
+	@PreDestroy
+	public void destruction() {
+		System.out.println("UserBean: destruction && passivation");
+		SingletonSessionFactory.closeSession(session);
+	}
 	
 }
