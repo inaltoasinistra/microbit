@@ -212,6 +212,14 @@ public class MtGoxInfo {
 		return usd;
 	}
 
+	public void setEur(BigDecimal eur) {
+		this.eur = eur;
+	}
+
+	public void setUsd(BigDecimal usd) {
+		this.usd = usd;
+	}
+
 	/**
 	 * @param args
 	 */

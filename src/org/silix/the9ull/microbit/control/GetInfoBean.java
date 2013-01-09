@@ -39,6 +39,8 @@ public class GetInfoBean implements GetInfoBeanRemote {
 		// External call (cache value into db? Good idea!)
 		if(!mtgox.update("USD")){
 			System.out.println("MtGox API problem");
+			if(mtgox.getUsd()==null)
+				mtgox.setUsd(new BigDecimal(0));
 		}
 		return mtgox.getUsd();
 	}
@@ -47,6 +49,8 @@ public class GetInfoBean implements GetInfoBeanRemote {
 	public BigDecimal valueBtcEur() {
 		if(!mtgox.update("EUR")){
 			System.out.println("MtGox API problem");
+			if(mtgox.getEur()==null)
+				mtgox.setEur(new BigDecimal(0));
 		}
 		return mtgox.getEur();
 	}
@@ -54,6 +58,7 @@ public class GetInfoBean implements GetInfoBeanRemote {
 	@Override
 	public int getIdFromAddress(String address) {
 		Query q = session.createQuery("from UserP usr where usr.deposit_address='"+address+"'");
+		@SuppressWarnings("unchecked")
 		List<UserP> l = (List<UserP>) q.list();
 		if(l.size()>0)
 			return l.get(0).getId();
@@ -62,11 +67,11 @@ public class GetInfoBean implements GetInfoBeanRemote {
 
 	@Override
 	public String getAddressFromId(int id) {
-		Query q = session.createQuery("from UserP usr where usr.id="+id);
-		List<UserP> l = (List<UserP>) q.list();
-		if(l.size()>0)
-			return l.get(0).getDeposit_address();
-		return "";
+		UserP user = (UserP) session.get(UserP.class, id);
+		if(user!=null)
+			return user.getDeposit_address();
+		else
+			return "";
 	}
 	
 }
