@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@page import="java.util.Enumeration" %>
+<%@page import="java.util.Collections" %>
+<%@page import="java.util.List" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -27,10 +29,13 @@
 	<%
 	if(login.isLogged()){
 	%>
-	User id: <jsp:getProperty name="login" property="id" />. <a href="logout.jsp">logout</a> <br />
+	User id: <jsp:getProperty name="login" property="id" />. Fund: <jsp:getProperty name="login" property="fund" />. <a href="index.jsp?contacts">contacts</a> <a href="logout.jsp">logout</a> <br />
 	<%
-	}
-	else {
+		List<String> l = Collections.list((Enumeration<String>)request.getParameterNames());
+		if(l.contains("contacts")){
+			
+		}
+	} else {
 	%>
 	<form name="login" action="login.jsp" method="POST">
 		<input type="text" name="id" value="id or deposit address" onclick="this.form.elements[0].value = ''" />

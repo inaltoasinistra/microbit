@@ -1,5 +1,6 @@
 package org.silix.the9ull.microbit.controlinterface;
 
+import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.util.regex.Pattern;
 
@@ -15,6 +16,8 @@ public class LoginJB {
 	private String address;
 	private String password;
 	private boolean logged = false;
+	
+	private Contacts contacts;
 	
 	private UserBeanRemote ub; //The Bean
 	
@@ -83,6 +86,11 @@ public class LoginJB {
 			}
 			try {
 				this.logged = ub.login(this.getId(), this.getPassword());
+				
+				if(this.logged){
+					contacts = new Contacts(this.ub);
+				
+				}
 					
 				System.out.println("id "+this.id);
 				System.out.println("address "+this.address);
@@ -97,6 +105,8 @@ public class LoginJB {
 		else {
 			System.out.println("LoginJB: Logout");
 			try {
+				this.contacts.logout();
+				this.contacts = null;
 				ub.logout();
 				this.logged = false;
 			} catch (RemoteException e) {
@@ -109,5 +119,25 @@ public class LoginJB {
 	public boolean isLogged() {
 		return logged;
 	}
+
+	public String getFund() {
+		System.out.println("LoginJB: updateFund");
+		try {
+			return ub.getFund().toPlainString();
+		} catch (RemoteException e) {
+			System.out.println("EJB server problem.");
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void setFund(String fund) {
+		// read only value
+	}
+
+	public void updateFund() {
+		
+	}
+
 
 }
