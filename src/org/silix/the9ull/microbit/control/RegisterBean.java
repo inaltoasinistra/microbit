@@ -38,4 +38,7 @@ public class RegisterBean implements RegisterBeanRemote {
 		return newUser;
 	}
 
+	public void ejbRemove() {
+		System.out.println("RegisterBean: ejbRemove");
+	}
 }

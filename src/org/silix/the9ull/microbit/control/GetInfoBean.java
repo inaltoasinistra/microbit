@@ -35,8 +35,6 @@ public class GetInfoBean implements GetInfoBeanRemote {
 
 	@Override
 	public BigDecimal valueBtcUsd() {
-		// TODO Auto-generated method stub
-		// External call (cache value into db? Good idea!)
 		if(!mtgox.update("USD")){
 			System.out.println("MtGox API problem");
 			if(mtgox.getUsd()==null)
@@ -72,6 +70,12 @@ public class GetInfoBean implements GetInfoBeanRemote {
 			return user.getDeposit_address();
 		else
 			return "";
+	}
+	
+	public void ejbRemove() {
+		System.out.println("GetInfoBean: ejbRemoved");
+		SingletonSessionFactory.closeSession(session);
+		session = null;
 	}
 	
 }

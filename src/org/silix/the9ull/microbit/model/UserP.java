@@ -32,8 +32,9 @@ public class UserP {
 	private Set<ContactP> contacts = new HashSet<ContactP>(0);
 	private Set<HistoryP> history_from = new HashSet<HistoryP>(0);
 	private Set<HistoryP> history_to = new HashSet<HistoryP>(0);
+
 	
-	public UserP(){		
+	public UserP(){
 	}
 
 	@Override
@@ -57,8 +58,6 @@ public class UserP {
 			return false;
 		return true;
 	}
-
-
 
 	public int getId() {
 		return id;
