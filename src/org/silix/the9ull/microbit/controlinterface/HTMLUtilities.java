@@ -5,7 +5,7 @@ import java.util.List;
 public class HTMLUtilities {
 
 	static String printTable(List<List<String>> table, List<String> header) {
-		String ret = "<table>";
+		String ret = "<table border=\"1\">";
 		if(header!=null){
 			ret += "<tr>";
 			for(String s : header)

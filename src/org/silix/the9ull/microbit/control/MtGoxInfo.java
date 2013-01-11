@@ -150,10 +150,10 @@ public class MtGoxInfo {
 		Transaction tx = session.beginTransaction();//needed by newUser()
 		String updated = PersistenceUtility.dictGet("valueBTC"+currency+"time", session);
 		
-		System.out.println(">> "+updated);
-		System.out.println(" long updated  "+new Long(updated));
-		System.out.println(" date  "+new Date().getTime());
-		System.out.println(" cache  "+cache);
+		//System.out.println(">> "+updated);
+		//System.out.println(" long updated  "+new Long(updated));
+		//System.out.println(" date  "+new Date().getTime());
+		//System.out.println(" cache  "+cache);
 		
 		if(updated!=null && new Date().getTime() - new Long(updated) < cache ){
 			System.out.println("update: Reading from cache");

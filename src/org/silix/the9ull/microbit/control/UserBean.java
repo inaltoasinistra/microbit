@@ -19,6 +19,7 @@ import javax.inject.Named;
 
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.silix.the9ull.microbit.model.ContactP;
 import org.silix.the9ull.microbit.model.SHA1;
 import org.silix.the9ull.microbit.model.SingletonSessionFactory;
@@ -120,6 +121,23 @@ public class UserBean implements UserBeanRemote {
 
 	public UserP getUser() {
 		return user;
+	}
+
+	@Override
+	public boolean newContact(String alias, String address)
+			throws RemoteException {
+		if(user==null)
+			return false;
+		Transaction tx = session.beginTransaction();
+		ContactP c = new ContactP();
+		c.setUser(getUser());
+		c.setAlias(alias);
+		c.setAddress(address);
+		
+		session.save(c); // And what's happen with existing contacts? 
+		
+		tx.commit();
+		return false;
 	}
 
 	

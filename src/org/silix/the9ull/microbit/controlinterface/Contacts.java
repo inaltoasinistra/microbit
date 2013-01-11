@@ -17,10 +17,10 @@ public class Contacts {
 	}
 	
 	public List<List<String>> get() {
-		List< List<String> > contacts = new LinkedList();
+		List< List<String> > contacts = new LinkedList<List<String>>();
 		try {
 			for(ContactP c : ub.getContacts()) {
-				List<String> l = new LinkedList();
+				List<String> l = new LinkedList<String>();
 				l.add(c.getAlias());
 				l.add(c.getAddress());
 				contacts.add(l);
