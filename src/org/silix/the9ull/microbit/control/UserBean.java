@@ -53,8 +53,8 @@ public class UserBean implements UserBeanRemote {
 
 	@Override
 	public boolean isIdentical(EJBObject arg0) throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
+		UserBean u = (UserBean) arg0;
+		return this.getUser().equals(u.getUser());
 	}
 
 	@Override
@@ -116,6 +116,10 @@ public class UserBean implements UserBeanRemote {
 		if(user==null)
 			return null;
 		return user.getContacts();
+	}
+
+	public UserP getUser() {
+		return user;
 	}
 
 	
