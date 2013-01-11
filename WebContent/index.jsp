@@ -33,7 +33,10 @@
 	<%
 		List<String> l = Collections.list((Enumeration<String>)request.getParameterNames());
 		if(l.contains("contacts")){
-			
+	%>
+		<jsp:getProperty name="login" property="contactsTable" />
+		
+	<%
 		}
 	} else {
 	%>

@@ -2,10 +2,14 @@ package org.silix.the9ull.microbit.controlinterface;
 
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.silix.the9ull.microbit.control.GetInfoBeanRemote;
 import org.silix.the9ull.microbit.control.UserBeanRemote;
+import org.silix.the9ull.microbit.model.ContactP;
 
 // Java Bean
 
@@ -139,5 +143,10 @@ public class LoginJB {
 		
 	}
 
-
+	public String getContactsTable() {
+		List<String> header = new LinkedList<String>();
+		header.add("Alias");
+		header.add("Address");
+		return HTMLUtilities.printTable(contacts.get(), header);
+	}
 }
