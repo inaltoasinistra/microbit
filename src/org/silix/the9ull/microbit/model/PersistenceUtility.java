@@ -2,9 +2,11 @@ package org.silix.the9ull.microbit.model;
 
 import java.math.BigDecimal;
 import java.net.ConnectException;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class PersistenceUtility {
 
@@ -49,5 +51,25 @@ public class PersistenceUtility {
 		user.setDeposit_address(daddress);
 		session.update(user);
 		return user;
+	}
+	
+	public static void resetPasswords(Session session) {
+		Query q = session.createQuery("select usr.id from UserP usr");
+		@SuppressWarnings("unchecked")
+		List<Integer> l = (List<Integer>) q.list();
+		UserP u;
+		for(int i : l) {
+			u = (UserP) session.load(UserP.class, i);
+			u.setPassword(SHA1.HMAC_digest(""+i,"1"));
+			session.update(u);
+		}
+	}
+	
+	static public void main(String[] args) {
+		Session session = SingletonSessionFactory.getSession();
+		Transaction tx = session.beginTransaction();
+		//resetPasswords(session); // All passwords → "1"
+		tx.commit();
+		SingletonSessionFactory.closeSession(session);
 	}
 }
