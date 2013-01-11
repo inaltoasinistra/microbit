@@ -12,21 +12,20 @@ public class PersistenceUtility {
 	}
 	
 	public static String dictGet(String key, Session session) {
-
-		String value = null;
-			
-		Query q = session.createQuery("select dict.value from DictP dict where dict.key='"+key+"'");
-		if(q.list().size()>0)
-			value = (String) q.list().get(0);
-		
-		return value;
+		DictP pair = (DictP) session.get(DictP.class, key);
+		if(pair!=null)
+			return pair.getValue();
+		return null;
 	}
 	
 	public static void dictSet(String key, String value, Session session) {
-		DictP dict = new DictP();
-		dict.setKey(key);
-		dict.setValue(value);
-		session.saveOrUpdate(dict);
+		DictP pair = (DictP) session.get(DictP.class, key);
+		if(pair==null){
+			pair = new DictP();
+			pair.setKey(key);
+		}
+		pair.setValue(value);
+		session.saveOrUpdate(pair);
 	}
 	
 	public static UserP newUser(String email, String password, Session session) throws ConnectException {

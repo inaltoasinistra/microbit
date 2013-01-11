@@ -17,7 +17,6 @@ import org.hibernate.Transaction;
 /*
  * Singleton. This class is a wrapper of Bitcoin,
  * moreover it implements persistence transactions.
- * (TODO Per ora se ne occupa Bitcoin)
  */
 public class Transactions {
 
