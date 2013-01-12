@@ -46,6 +46,10 @@ public class PersistenceUtility {
 		
 		//deposit address
 		String daddress = bc.getnewaddress("user"+id_user);
+		if(daddress==null){
+			System.out.println("Error: Is Bitcoin started?");
+			return null;
+		}
 		System.out.println("New address: "+daddress);
 		
 		user.setDeposit_address(daddress);

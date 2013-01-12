@@ -27,7 +27,13 @@ public class RegisterBean implements RegisterBeanRemote {
 		
 		try {
 			newUser = PersistenceUtility.newUser(email, password, session);
+			if(newUser==null){
+				tx.commit();
+				SingletonSessionFactory.closeSession(session);
+				return null;
+			}
 		} catch (ConnectException e) {
+			tx.commit();
 			SingletonSessionFactory.closeSession(session);
 			return null;
 		}

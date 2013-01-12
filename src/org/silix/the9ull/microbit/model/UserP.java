@@ -16,7 +16,7 @@ CREATE TABLE `User` (
 PRIMARY KEY (`id`),
 KEY (`deposit_address`),
 UNIQUE KEY (`deposit_address`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1; 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
  */
 
 @Entity
@@ -35,6 +35,7 @@ public class UserP {
 
 	
 	public UserP(){
+		this.deposit_address = ""; // Avoid NullPointerException
 	}
 
 	@Override
@@ -72,6 +73,8 @@ public class UserP {
 	}
 
 	public void setDeposit_address(String deposit_address) {
+		assert(deposit_address!=null);
+		
 		if(deposit_address.length()>34)
 			this.deposit_address = deposit_address.substring(0,34);
 		else

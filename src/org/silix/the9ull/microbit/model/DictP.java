@@ -7,7 +7,7 @@ CREATE TABLE `Dict` (
 `key` VARCHAR(20) NOT NULL,
 `value` VARCHAR(100),
 PRIMARY KEY(`key`) 
-) ENGINE=InnoDB DEFAULT CHARSET=latin1; 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
  */
 
 @Entity

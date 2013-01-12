@@ -52,7 +52,7 @@ public class Bitcoin {
 		});
 		
 		proxy = new ServiceProxy("http://localhost:8332");
-		
+		System.out.println("Bitcoin: init done");
 	}
 	
 	boolean validateaddress(String address) {

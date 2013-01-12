@@ -8,7 +8,7 @@ CREATE TABLE `Contact` (
 PRIMARY KEY (`id_user`,`alias`), 
 KEY `FK_id` (`id_user`), 
 CONSTRAINT `FK_id` FOREIGN KEY (`id_user`) REFERENCES `User` (`id`) 
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 */
 
 import java.io.Serializable;

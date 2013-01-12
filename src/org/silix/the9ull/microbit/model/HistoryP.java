@@ -21,7 +21,7 @@ KEY (`txidcrc`),
 KEY `FK_fromto` (`from`), 
 CONSTRAINT `FK_from` FOREIGN KEY (`from`) REFERENCES `User` (`id`),
 CONSTRAINT `FK_to` FOREIGN KEY (`to`) REFERENCES `User` (`id`) 
-) ENGINE=InnoDB DEFAULT CHARSET=latin1; 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
  */
 
 @Entity
