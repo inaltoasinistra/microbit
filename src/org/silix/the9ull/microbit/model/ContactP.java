@@ -37,7 +37,10 @@ public class ContactP implements Serializable, Comparable<ContactP> {
 	}
 
 	public void setAlias(String alias) {
-		this.alias = alias;
+		if(alias.length()>50)
+			this.alias = alias.substring(0, 50);
+		else
+			this.alias = alias;
 	}
 
 	public String getAddress() {
@@ -45,7 +48,10 @@ public class ContactP implements Serializable, Comparable<ContactP> {
 	}
 
 	public void setAddress(String address) {
-		this.address = address;
+		if(address.length()>34)
+			this.address = address.substring(0,34);
+		else
+			this.address = address;
 	}
 
 	public static long getSerialversionuid() {

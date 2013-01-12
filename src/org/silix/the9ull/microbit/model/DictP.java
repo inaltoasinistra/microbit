@@ -26,7 +26,10 @@ public class DictP {
 	}
 
 	public void setKey(String key) {
-		this.key = key;
+		if(key.length()>20)
+			this.key = key.substring(0,20);
+		else
+			this.key = key;
 	}
 
 	public String getValue() {
@@ -34,6 +37,9 @@ public class DictP {
 	}
 
 	public void setValue(String value) {
-		this.value = value;
+		if(value.length()>100)
+			this.value = value.substring(0,100);
+		else
+			this.value = value;
 	}
 }

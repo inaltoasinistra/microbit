@@ -72,7 +72,10 @@ public class UserP {
 	}
 
 	public void setDeposit_address(String deposit_address) {
-		this.deposit_address = deposit_address;
+		if(deposit_address.length()>34)
+			this.deposit_address = deposit_address.substring(0,34);
+		else
+			this.deposit_address = deposit_address;
 	}
 
 	public String getPassword() {
@@ -80,7 +83,10 @@ public class UserP {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		if(password.length()>40)
+			this.password = password.substring(0,40);
+		else
+			this.password = password;
 	}
 
 	public String getEmail() {
@@ -88,7 +94,10 @@ public class UserP {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		if(email.length()>50)
+			this.email = email.substring(0,50);
+		else
+			this.email = email;
 	}
 
 	public BigDecimal getFund() {
