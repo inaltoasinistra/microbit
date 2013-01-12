@@ -17,7 +17,7 @@ import javax.persistence.*;
 
 @Entity
 @Table (name="Contact")
-public class ContactP implements Serializable {
+public class ContactP implements Serializable, Comparable<ContactP> {
 
 	private static final long serialVersionUID = -6578476539882495610L;
 	
@@ -69,4 +69,11 @@ public class ContactP implements Serializable {
 	public int hashCode() {
 		return this.getUser().hashCode() ^ this.getAlias().hashCode();
 	}
+
+	@Override
+	public int compareTo(ContactP o) {
+		return this.getAlias().compareTo(o.getAlias());
+	}
+	
+	
 }

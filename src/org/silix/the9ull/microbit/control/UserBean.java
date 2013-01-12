@@ -20,6 +20,7 @@ import javax.inject.Named;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.mapping.PrimaryKey;
 import org.silix.the9ull.microbit.model.ContactP;
 import org.silix.the9ull.microbit.model.SHA1;
 import org.silix.the9ull.microbit.model.SingletonSessionFactory;
@@ -123,21 +124,51 @@ public class UserBean implements UserBeanRemote {
 		return user;
 	}
 
+	public boolean newContact2(String alias, String address)
+			throws RemoteException {
+		if(user==null)
+			return false;
+		Transaction tx = session.beginTransaction();
+		Set<ContactP> cc = user.getContacts();
+		
+		
+		ContactP c = new ContactP();
+		c.setUser(getUser());
+		c.setAlias(alias);
+		c.setAddress(address);
+		
+		cc.add(c);
+		System.out.println("New contact: "+c.getAlias());
+		//session.update(cc); // And what's happen with existing contacts?
+		//not needed, stackoverflow said
+		session.save(c);
+		
+		tx.commit();
+		return true;
+	}
+	
 	@Override
 	public boolean newContact(String alias, String address)
 			throws RemoteException {
+		
 		if(user==null)
 			return false;
 		Transaction tx = session.beginTransaction();
 		ContactP c = new ContactP();
 		c.setUser(getUser());
 		c.setAlias(alias);
+		ContactP old = (ContactP) session.get(ContactP.class, c);
+		if(old!=null) {
+			tx.commit();
+			return false;
+		}
 		c.setAddress(address);
-		
+		System.out.println("New contact: "+c.getAlias());
+		//Add to both, session and runtime contacts
 		session.save(c); // And what's happen with existing contacts? 
-		
+		user.getContacts().add(c);
 		tx.commit();
-		return false;
+		return true;
 	}
 
 	

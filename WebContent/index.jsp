@@ -29,12 +29,29 @@
 	<%
 	if(login.isLogged()){
 	%>
-	User id: <jsp:getProperty name="login" property="id" />. Fund: <jsp:getProperty name="login" property="fund" />. <a href="index.jsp?contacts">contacts</a> <a href="logout.jsp">logout</a> <br />
+	User id: <jsp:getProperty name="login" property="id" />. Fund: <jsp:getProperty name="login" property="fund" />. <a href="index.jsp?contacts">contacts</a> <a href="logout.jsp">logout</a><br />
+	Deposit address: <jsp:getProperty name="login" property="address" /><br />
 	<%
 		List<String> l = Collections.list((Enumeration<String>)request.getParameterNames());
 		if(l.contains("contacts")){
 	%>
+		<jsp:setProperty name="login" property="*" />
+	<%
+		if(request!=null && request.getParameter("newAlias")!=null){
+			// new contact!
+			login.addNewContact();
+		}
+	%>
 		<jsp:getProperty name="login" property="contactsTable" /> <br />
+	<%
+	if(request!=null && request.getParameter("newAlias")!=null) {
+		if(login.isAddedContact()) {
+	%>Contact inserted<br /><%
+		} else {
+	%><font color="red">Contact not inserted</font><br /><%		
+		}
+	}
+	%>
 		<jsp:include page="newcontact.jsp" />
 	<%
 		}

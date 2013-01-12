@@ -21,6 +21,11 @@ public class LoginJB {
 	private String password;
 	private boolean logged = false;
 	
+	//newContact
+	private String newAlias;
+	private String newAddress;
+	private boolean addedContact;
+	
 	private Contacts contacts;
 	
 	private UserBeanRemote ub; //The Bean
@@ -149,4 +154,44 @@ public class LoginJB {
 		header.add("Address");
 		return HTMLUtilities.printTable(contacts.get(), header);
 	}
+
+
+	public String getNewAlias() {
+		return newAlias;
+	}
+
+
+	public void setNewAlias(String newAlias) {
+		this.newAlias = newAlias;
+	}
+
+
+	public String getNewAddress() {
+		return newAddress;
+	}
+
+
+	public void setNewAddress(String newAddress) {
+		this.newAddress = newAddress;
+	}
+	
+	public void addNewContact() {
+		try {
+			addedContact = ub.newContact(newAlias, newAddress);
+		} catch (RemoteException e) {
+			addedContact = false;
+			System.out.println("EJB server problem.");
+			e.printStackTrace();
+		}
+	}
+	
+	public void setAddedContact(boolean addedContact) {
+		this.addedContact = addedContact;
+	}
+
+
+	public boolean isAddedContact() {
+		return addedContact;
+	}
+
 }
