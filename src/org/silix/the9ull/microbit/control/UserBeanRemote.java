@@ -11,4 +11,6 @@ public interface UserBeanRemote extends javax.ejb.EJBObject {
 	public BigDecimal getFund() throws java.rmi.RemoteException;
 	public Set<ContactP> getContacts() throws java.rmi.RemoteException;
 	public boolean newContact(String alias, String address) throws java.rmi.RemoteException;
+	public boolean removeContact(String alias) throws java.rmi.RemoteException;
+	public boolean sendTo(String alias, BigDecimal howMuch) throws java.rmi.RemoteException;
 }

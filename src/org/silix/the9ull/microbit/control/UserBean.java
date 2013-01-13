@@ -110,7 +110,8 @@ public class UserBean implements UserBeanRemote {
 	}
 	
 	public void setFund(BigDecimal fund) throws RemoteException {
-		
+		System.out.println("UserBean: you can't create money");
+		assert(false);
 	}
 
 	@Override
@@ -169,6 +170,37 @@ public class UserBean implements UserBeanRemote {
 		user.getContacts().add(c);
 		tx.commit();
 		return true;
+	}
+
+	@Override
+	public boolean removeContact(String alias) throws RemoteException {
+		if(user==null)
+			return false;
+		
+		Transaction tx = session.beginTransaction();
+		ContactP c = new ContactP();
+		c.setUser(getUser());
+		c.setAlias(alias);
+		c = (ContactP) session.get(ContactP.class, c);
+		if(c==null) {
+			tx.commit();
+			System.out.println("Contact not deleted: "+alias);
+			return false;
+		}
+		System.out.println("Delete contact: "+alias);
+		//Add to both, session and runtime contacts
+		
+		session.delete(c); 
+		user.getContacts().remove(c);
+		tx.commit();
+		return true;
+	}
+
+	@Override
+	public boolean sendTo(String alias, BigDecimal howMuch) throws RemoteException {
+		// TODO Auto-generated method stub
+		System.out.println("UserBean: sendTo "+alias+" "+howMuch);
+		return false;
 	}
 
 	

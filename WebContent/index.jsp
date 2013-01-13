@@ -28,30 +28,38 @@
 	<br />
 	<%
 	if(login.isLogged()){
+		List<String> parameters = Collections.list((Enumeration<String>)request.getParameterNames());
 	%>
 	User id: <jsp:getProperty name="login" property="id" />. Fund: <jsp:getProperty name="login" property="fund" />. <a href="index.jsp?contacts">contacts</a> <a href="logout.jsp">logout</a><br />
-	Deposit address: <jsp:getProperty name="login" property="address" /><br />
+	Deposit address: <jsp:getProperty name="login" property="address" /><br /><br />
 	<%
-		List<String> l = Collections.list((Enumeration<String>)request.getParameterNames());
-		if(l.contains("contacts")){
-	%>
-		<jsp:setProperty name="login" property="*" />
-	<%
-		if(request!=null && request.getParameter("newAlias")!=null){
-			// new contact!
-			login.addNewContact();
-		}
-	%>
-		<jsp:getProperty name="login" property="contactsTable" /> <br />
-	<%
-	if(request!=null && request.getParameter("newAlias")!=null) {
-		if(login.isAddedContact()) {
+		if(parameters.contains("contacts")){
+	%><jsp:setProperty name="login" property="*" /><%
+			if(parameters.contains("newContact")){
+				// new contact!
+				login.addNewContact();
+				if(login.isAddedContact()) {
 	%>Contact inserted<br /><%
-		} else {
+				} else {
 	%><font color="red">Contact not inserted</font><br /><%		
-		}
-	}
+				}
+			} else if(parameters.contains("deleteContact")) {
+				login.removeContact();
+				if(login.isRemovedContact()) {
+	%>Contact removed<br /><%				
+				} else {
+	%><font color="red">Contact not removed</font><br /><%				
+				}
+			} else if(parameters.contains("sendTo")) {
+				login.sendTo();
+				if(login.isSentTo()){
+	%><jsp:getProperty name="login" property="howMuch" /> sent to <jsp:getProperty name="login" property="alias" /><br /><%
+				} else {
+	%><font color="red">Transaction failed</font><br /><%				
+				}
+			}
 	%>
+		<jsp:getProperty name="login" property="contactsTable" /><br />
 		<jsp:include page="newcontact.jsp" />
 	<%
 		}
@@ -62,7 +70,9 @@
 		<input type="password" name="password" value="***" onclick="this.form.elements[1].value = ''" />
 		<input type="submit" value="Go" style="visibility:hidden" />
 	</form>
-	<% } %>
+	<%
+	}
+	%>
 </div>
 
 </body>

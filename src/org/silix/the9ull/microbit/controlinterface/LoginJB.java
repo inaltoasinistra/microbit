@@ -4,12 +4,10 @@ import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.silix.the9ull.microbit.control.GetInfoBeanRemote;
 import org.silix.the9ull.microbit.control.UserBeanRemote;
-import org.silix.the9ull.microbit.model.ContactP;
 
 // Java Bean
 
@@ -22,15 +20,21 @@ public class LoginJB {
 	private boolean logged = false;
 	
 	//newContact
-	private String newAlias;
-	private String newAddress;
+	private String alias;
+	private String contactAddress;
 	private boolean addedContact;
+	private boolean removedContact;
+	private String sendTo;
+	private String howMuch;
+	private boolean sentTo;
 	
+
 	private Contacts contacts;
 	
 	private UserBeanRemote ub; //The Bean
 	
 	public LoginJB() {
+		this.howMuch = ""; // Instantiate the object
 	}
 
 
@@ -148,38 +152,56 @@ public class LoginJB {
 		
 	}
 
+	final static String htmldelete = "<form name=\"deleteContact\" action=\"index.jsp?contacts&deleteContact\" method=\"POST\">" +
+			"<input type=\"hidden\" name=\"alias\" value=\"$ALIAS\" />" +
+			"<input type=\"submit\" value=\"x\" />" +
+			"</form>";
+	final static String htmlsendto = "<form name=\"payment\" action=\"index.jsp?contacts&sendTo\" method=\"POST\">" +
+			"<input type=\"text\" name=\"howMuch\" value=\"0.00000000\" onclick=\"this.form.elements[0].value = ''\" />" +
+			"<input type=\"hidden\" name=\"alias\" value=\"$ALIAS\" />" +
+			"<input type=\"hidden\" name=\"contactAddress\" value=\"$ADDRESS\" />" +
+			"<input type=\"submit\" value=\"To\" />" +
+			"</form>";
+	
 	public String getContactsTable() {
 		List<String> header = new LinkedList<String>();
+		header.add("Pay");
 		header.add("Alias");
 		header.add("Address");
-		return HTMLUtilities.printTable(contacts.get(), header);
+		header.add("Delete");
+		
+		List<List<String>> cc = contacts.get();
+		for(List<String> l : cc) {
+			l.add(0, htmlsendto.replace("$ALIAS", l.get(0)).replace("$ADDRESS", l.get(1))); // Old index 1
+			l.add(htmldelete.replace("$ALIAS", l.get(1))); // New index 1 (old 0)
+		}
+		return HTMLUtilities.printTable(cc, header);
+	}
+
+	public String getContactAddress() {
+		return contactAddress;
 	}
 
 
-	public String getNewAlias() {
-		return newAlias;
-	}
-
-
-	public void setNewAlias(String newAlias) {
-		this.newAlias = newAlias;
-	}
-
-
-	public String getNewAddress() {
-		return newAddress;
-	}
-
-
-	public void setNewAddress(String newAddress) {
-		this.newAddress = newAddress;
+	public void setContactAddress(String contactAddress) {
+		this.contactAddress = contactAddress;
 	}
 	
 	public void addNewContact() {
 		try {
-			addedContact = ub.newContact(newAlias, newAddress);
+			addedContact = ub.newContact(alias, contactAddress);
 		} catch (RemoteException e) {
 			addedContact = false;
+			System.out.println("EJB server problem.");
+			e.printStackTrace();
+		}
+	}
+	
+	public void removeContact(){
+		try {
+			setRemovedContact(ub.removeContact(alias));
+		} catch (RemoteException e) {
+			setRemovedContact(false);
 			System.out.println("EJB server problem.");
 			e.printStackTrace();
 		}
@@ -194,4 +216,72 @@ public class LoginJB {
 		return addedContact;
 	}
 
+
+	public boolean isRemovedContact() {
+		return removedContact;
+	}
+
+
+	public void setRemovedContact(boolean removedContact) {
+		this.removedContact = removedContact;
+	}
+
+	public void sendTo() {
+		System.out.println("LoginJB: "+contactAddress+" "+howMuch);
+		BigDecimal hm = null;
+		try {
+			hm = new BigDecimal(getHowMuch()).setScale(8,BigDecimal.ROUND_HALF_DOWN); // BitCoin format;
+			setHowMuch(hm.toPlainString());
+		} catch(NumberFormatException e) {
+			System.out.println("NumberFormatException: "+getHowMuch());
+			setSentTo(false);
+			return;
+		}
+		try {
+			
+			setSentTo(ub.sendTo(contactAddress,hm));
+		} catch (RemoteException e) {
+			setSentTo(false);
+			System.out.println("EJB server problem.");
+			e.printStackTrace();
+		}
+	}
+	
+	public String getAlias() {
+		return alias;
+	}
+
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+
+	public String getSendTo() {
+		return sendTo;
+	}
+
+	public void setSendTo(String sendTo) {
+		this.sendTo = sendTo;
+	}
+
+
+	public boolean isSentTo() {
+		return sentTo;
+	}
+
+	public void setSentTo(boolean sentTo) {
+		this.sentTo = sentTo;
+	}
+
+
+	public String getHowMuch() {
+		return howMuch;
+	}
+
+
+	public void setHowMuch(String howMuch) {
+		this.howMuch = howMuch;
+	}
+	
 }
