@@ -41,7 +41,7 @@ public class Transactions {
 		return instance;
 	}
 	
-	private boolean sendtouser(UserP from, UserP to, BigDecimal amount, Session session) {
+	public boolean sendtouser(UserP from, UserP to, BigDecimal amount, Session session) {
 		boolean ok=false;
 		BigDecimal fee;
 		String fee_s = PersistenceUtility.dictGet("internalfee", session);
@@ -52,6 +52,7 @@ public class Transactions {
 			fee = new BigDecimal(fee_s);
 		
 		if(amount.add(fee).compareTo(from.getFund()) <= 0){
+			System.out.println("Transaction: #55");
 			from.setFund(from.getFund().subtract(amount).subtract(fee));
 			to.setFund(to.getFund().add(amount));
 			
@@ -71,22 +72,6 @@ public class Transactions {
 		return ok;
 	}
 
-	boolean sendtouser(int fromid, int toid, BigDecimal amount, Session session) {
-		boolean ok=false;
-		
-		UserP from, to;
-		
-		Query q = session.createQuery("from UserP user where user.id="+fromid);
-		from = (UserP)q.list().get(0);
-		q = session.createQuery("from UserP user where user.id="+toid);
-		to = (UserP)q.list().get(0);
-		
-		ok = sendtouser(from,to,amount,session);
-		
-		return ok;
-	}
-	
-
 	public Tx sendtoaddress(UserP from, String address, BigDecimal amount, Session session) {
 		String txid = null;
 		Tx tx;
@@ -96,7 +81,7 @@ public class Transactions {
 			if(sfee==null)
 				sfee = MINIMUMFEE;
 			fee = new BigDecimal(sfee);
-			System.out.println("Fee: "+fee);
+			System.out.println("Transactions: Fee: "+fee);
 		}
 			
 		if(bc.validateaddress(address)
@@ -116,6 +101,7 @@ public class Transactions {
 						address.equals((String)t.get("address")) && 
 						"send".equals((String)t.get("category"))) {
 					
+					System.out.println("Found tx "+t);
 					tx.setTxid((String)t.get("txid"));
 					tx.setAddress(address);
 					tx.setAmount(new BigDecimal((Double)t.get("amount")).setScale(8,BigDecimal.ROUND_HALF_DOWN));
@@ -129,10 +115,11 @@ public class Transactions {
 
 					
 					//update fee
-					//System.out.println(""+fee+" "+tx.getFee());
+					System.out.println("Fees: prev: "+fee+" next: "+tx.getFee());
 					if(!fee.equals(tx.getFee()) && tx.getFee().signum()!=0){
 						fee = tx.getFee();
 						PersistenceUtility.dictSet("minimumfee", ""+fee, session);
+						System.out.println("Fee updated to "+fee);
 					}
 
 					// Insert History
@@ -161,8 +148,10 @@ public class Transactions {
 			return tx;
 		}
 		
+		System.out.println("Transactions: sendtoaddress: Transaction infeasible");
 		System.out.println("Valid address: "+bc.validateaddress(address));
 		System.out.println("Server Balance: "+bc.getbalanceall());
+		System.out.println("User Balance: "+from.getFund());
 		System.out.println("Amount+fee: "+amount.add(fee));
 		
 		return null;
@@ -284,13 +273,6 @@ public class Transactions {
 		//		tx.getAmount().add(tx.getFee()).multiply(new BigDecimal(-1)));
 		//System.out.println(bc.getbalanceall());
 
-		SessionFactory sessionFactory = SingletonSessionFactory.getSessionFactory();
-		Session session = sessionFactory.openSession(); 
-		Transaction htx = session.beginTransaction();
-		
-		bt.updatefunds(false,session);
-		htx.commit();
-		
 		/*
 		SessionFactory sessionFactory = SingletonSessionFactory.getSessionFactory();
 		Session session = sessionFactory.openSession(); 
@@ -306,17 +288,6 @@ public class Transactions {
 
 		System.out.println(bt.sendtoaddress(user,"mrZQpbfo4RqEoBeJw4u5E9u6CEJsycjEM5", new BigDecimal("0.2")));
 		*/
-		htx = session.beginTransaction();
-		for(int i=0 ; i<2 ; i++){
-			System.out.println(bt.sendtouser(103, 105, new BigDecimal("1"),session));
-			System.out.println(bt.sendtouser(105, 88, new BigDecimal("0.4"),session));
-			System.out.println(bt.sendtouser(105, 88, new BigDecimal("0.6"),session));
-			System.out.println(bt.sendtouser(88, 104, new BigDecimal("1"),session));
-			System.out.println(bt.sendtouser(104, 103, new BigDecimal("1"),session));
-		}
-		htx.commit();
-		session.close();
-		
 		/*while(bt.sendtouser(87, 105, new BigDecimal("0.01"))){
 			
 		}*/

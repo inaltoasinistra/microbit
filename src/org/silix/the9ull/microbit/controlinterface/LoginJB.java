@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import org.silix.the9ull.microbit.control.GetInfoBeanRemote;
 import org.silix.the9ull.microbit.control.UserBeanRemote;
+import org.silix.the9ull.microbit.model.Tx;
 
 // Java Bean
 
@@ -27,6 +28,7 @@ public class LoginJB {
 	private String sendTo;
 	private String howMuch;
 	private boolean sentTo;
+	private BigDecimal fee;
 	
 
 	private Contacts contacts;
@@ -157,7 +159,7 @@ public class LoginJB {
 			"<input type=\"submit\" value=\"x\" />" +
 			"</form>";
 	final static String htmlsendto = "<form name=\"payment\" action=\"index.jsp?contacts&sendTo\" method=\"POST\">" +
-			"<input type=\"text\" name=\"howMuch\" value=\"0.00000000\" onclick=\"this.form.elements[0].value = ''\" />" +
+			"<input type=\"text\" name=\"howMuch\" value=\"0.00000000\" />" +
 			"<input type=\"hidden\" name=\"alias\" value=\"$ALIAS\" />" +
 			"<input type=\"hidden\" name=\"contactAddress\" value=\"$ADDRESS\" />" +
 			"<input type=\"submit\" value=\"To\" />" +
@@ -238,8 +240,19 @@ public class LoginJB {
 			return;
 		}
 		try {
-			
-			setSentTo(ub.sendTo(contactAddress,hm));
+			Tx tx = ub.sendTo(contactAddress,hm);
+			if(tx!=null){
+				setSentTo(true);
+				BigDecimal f = tx.getFee();
+				if(f==null) {
+					setFee(new BigDecimal(0));
+				}
+				else if(f.compareTo(new BigDecimal(0))<=0)
+					setFee(f.negate());
+				else
+					setFee(f);
+			} else
+				setSentTo(false);
 		} catch (RemoteException e) {
 			setSentTo(false);
 			System.out.println("EJB server problem.");
@@ -282,6 +295,16 @@ public class LoginJB {
 
 	public void setHowMuch(String howMuch) {
 		this.howMuch = howMuch;
+	}
+
+
+	public BigDecimal getFee() {
+		return fee;
+	}
+
+
+	public void setFee(BigDecimal fee) {
+		this.fee = fee;
 	}
 	
 }

@@ -15,6 +15,8 @@
 <jsp:useBean id="login" scope="session" class="org.silix.the9ull.microbit.controlinterface.LoginJB" />
 <jsp:useBean id="info" scope="application" class="org.silix.the9ull.microbit.controlinterface.GetInfoJB" />
 
+<jsp:setProperty name="login" property="*" />
+
 <div align="left">
 	<%
 	if(!login.isLogged()){
@@ -29,12 +31,16 @@
 	<%
 	if(login.isLogged()){
 		List<String> parameters = Collections.list((Enumeration<String>)request.getParameterNames());
+		if(parameters.contains("sendTo")) {
+			//Senda money before load user Fund
+			login.sendTo();
+		}
 	%>
 	User id: <jsp:getProperty name="login" property="id" />. Fund: <jsp:getProperty name="login" property="fund" />. <a href="index.jsp?contacts">contacts</a> <a href="logout.jsp">logout</a><br />
 	Deposit address: <jsp:getProperty name="login" property="address" /><br /><br />
 	<%
 		if(parameters.contains("contacts")){
-	%><jsp:setProperty name="login" property="*" /><%
+	%><%
 			if(parameters.contains("newContact")){
 				// new contact!
 				login.addNewContact();
@@ -51,9 +57,10 @@
 	%><font color="red">Contact not removed</font><br /><%				
 				}
 			} else if(parameters.contains("sendTo")) {
-				login.sendTo();
 				if(login.isSentTo()){
-	%><jsp:getProperty name="login" property="howMuch" /> sent to <jsp:getProperty name="login" property="alias" /><br /><%
+	%><jsp:getProperty name="login" property="howMuch" />
+	sent to <jsp:getProperty name="login" property="alias" />
+	(fee: <jsp:getProperty name="login" property="fee" />)<br /><%
 				} else {
 	%><font color="red">Transaction failed</font><br /><%				
 				}

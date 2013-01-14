@@ -3,6 +3,7 @@ package org.silix.the9ull.microbit.control;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -18,13 +19,16 @@ import javax.ejb.Stateful;
 import javax.inject.Named;
 
 import org.hibernate.ObjectNotFoundException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.mapping.PrimaryKey;
 import org.silix.the9ull.microbit.model.ContactP;
+import org.silix.the9ull.microbit.model.PersistenceUtility;
 import org.silix.the9ull.microbit.model.SHA1;
 import org.silix.the9ull.microbit.model.SingletonSessionFactory;
 import org.silix.the9ull.microbit.model.Transactions;
+import org.silix.the9ull.microbit.model.Tx;
 import org.silix.the9ull.microbit.model.UserP;
 
 @Stateful
@@ -82,6 +86,7 @@ public class UserBean implements UserBeanRemote {
 		System.out.println("UserBean: destruction && passivation");
 		SingletonSessionFactory.closeSession(session);
 		session = null;
+		transactions = null;
 	}
 
 	// User API
@@ -197,11 +202,65 @@ public class UserBean implements UserBeanRemote {
 	}
 
 	@Override
-	public boolean sendTo(String alias, BigDecimal howMuch) throws RemoteException {
-		// TODO Auto-generated method stub
-		System.out.println("UserBean: sendTo "+alias+" "+howMuch);
-		return false;
-	}
+	public Tx sendTo(String address, BigDecimal howMuch) throws RemoteException {
+		int toUserId = 0;
+		Tx tx;
+		System.out.println("UserBean: sendTo "+address+" "+howMuch);
+		if(howMuch.compareTo(new BigDecimal(0))<=0) {
+			System.out.println("howMuch>0");
+			return null;
+		}
+		// Is alias an user id?
+		
+		UserP toUser;
+		
+		//Assumption 1: address of a user
+		Transaction htx = session.beginTransaction();
+		Query q = session.createQuery("from UserP usr where usr.deposit_address='"+address+"'");
+		@SuppressWarnings("unchecked")
+		List<UserP> l = (List<UserP>) q.list();
+		if(l.size()>0)
+			toUserId = l.get(0).getId();
+		else {
+			try {
+				toUserId = new Integer(address);
+			} catch(NumberFormatException e) {}
+		}
+		
+		if(toUserId>0) {
+			// Transaction to User
 
-	
+			System.out.println("User transaction 1.");
+			toUser = (UserP) session.get(UserP.class, toUserId);
+			if(toUser==null) {
+				System.out.println("User transaction 2.");
+				htx.commit();
+				return null;
+			}
+			if(transactions.sendtouser(user, toUser, howMuch, session)){
+				tx = new Tx();
+				System.out.println("User transaction 3.");
+				String internalFee = PersistenceUtility.dictGet("internalfee", session);
+				if(internalFee!=null) {
+					System.out.println("User transaction 4.");
+					tx.setFee(new BigDecimal(internalFee));
+				}
+				System.out.println("UserBean: to user "+tx);
+				htx.commit();
+				return tx;	
+			} else {
+				System.out.println("User transaction 5.");
+				htx.commit();
+				return null;
+			}
+		} else {
+			// Transaction to address
+			
+			System.out.println("Address transaction 1.");
+			tx = transactions.sendtoaddress(user, address, howMuch, session);
+			htx.commit();
+			System.out.println("UserBean: to address "+tx);
+			return tx;
+		}
+	}	
 }

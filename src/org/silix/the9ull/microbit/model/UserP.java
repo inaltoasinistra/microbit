@@ -1,5 +1,6 @@
 package org.silix.the9ull.microbit.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,8 +22,7 @@ UNIQUE KEY (`deposit_address`)
 
 @Entity
 @Table (name="User")
-public class UserP {
-
+public class UserP implements Serializable {
 	@Id
 	private int id;
 	private String deposit_address;
@@ -35,7 +35,7 @@ public class UserP {
 
 	
 	public UserP(){
-		this.deposit_address = ""; // Avoid NullPointerException
+		this.deposit_address = ""; // Instantiate object
 	}
 
 	@Override
