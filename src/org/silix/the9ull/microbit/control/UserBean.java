@@ -18,11 +18,9 @@ import javax.ejb.RemoveException;
 import javax.ejb.Stateful;
 import javax.inject.Named;
 
-import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.mapping.PrimaryKey;
 import org.silix.the9ull.microbit.model.ContactP;
 import org.silix.the9ull.microbit.model.PersistenceUtility;
 import org.silix.the9ull.microbit.model.SHA1;
@@ -76,7 +74,7 @@ public class UserBean implements UserBeanRemote {
 		try {
 			transactions = Transactions.getInstance();
 		} catch (IOException e) {
-			System.out.println("UserBean: Transactions not loaded");
+			System.out.println("UserBean: Transactions obj not loaded");
 			e.printStackTrace();
 		}
 	}
@@ -229,6 +227,11 @@ public class UserBean implements UserBeanRemote {
 		
 		if(toUserId>0) {
 			// Transaction to User
+			
+			if(toUserId == user.getId()){
+				htx.commit();
+				return null;
+			}
 
 			System.out.println("User transaction 1.");
 			toUser = (UserP) session.get(UserP.class, toUserId);

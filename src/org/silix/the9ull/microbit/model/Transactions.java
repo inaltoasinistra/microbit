@@ -11,7 +11,6 @@ import java.util.zip.CRC32;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 /*
@@ -253,7 +252,7 @@ public class Transactions {
 		 
 		Transactions bt = Transactions.getInstance();
 		
-		System.out.println("Qui ci sono");
+		//Bitcoin bc = bt.bc;
 		//System.out.println( bc.validateaddress("n2NAjt6oZBPZY5bhTGEBHkENTDtrpYc7fS") );
 		//System.out.println( bc.validateaddress("14UWwaX1BdCHEfXQF9KqivMmK3EbWjHDoV") );
 		//System.out.println(bc.listaccounts());
@@ -263,38 +262,21 @@ public class Transactions {
 		
 
 		//System.out.println(bc.getbalanceall());
-		
-		Random r = new Random();
-		//Tx tx = bc.sendtoaddress("mrZQpbfo4RqEoBeJw4u5E9u6CEJsycjEM5", new BigDecimal(r.nextFloat()/1000.0));
-		
-		
-		//System.out.println(""+tx.getAmount().multiply(new BigDecimal(-1))+" + "+
-		//		tx.getFee().multiply(new BigDecimal(-1))+" = "+
-		//		tx.getAmount().add(tx.getFee()).multiply(new BigDecimal(-1)));
-		//System.out.println(bc.getbalanceall());
-
-		/*
-		SessionFactory sessionFactory = SingletonSessionFactory.getSessionFactory();
-		Session session = sessionFactory.openSession(); 
+		Session session = SingletonSessionFactory.getSession();
 		Transaction htx = session.beginTransaction();
-		
-		Query q = session.createQuery("from UserP user where user.id=87");
-		UserP user = (UserP)q.list().get(0);
-		
+		UserP from, to;
+		from = (UserP) session.load(UserP.class, 1);
+		String address = "mvBXcQ3ZAPsbZh8kg9G3X1mRg8g8bwJXCR";
+		Tx tx = bt.sendtoaddress(from, address, new BigDecimal(0.00234), session);
+		//sendtoaddress("mrZQpbfo4RqEoBeJw4u5E9u6CEJsycjEM5", new BigDecimal(0.00123));
+		System.out.println(tx);
 		htx.commit();
-		session.close();
 		
-		//bc.updatefunds(false);
-
-		System.out.println(bt.sendtoaddress(user,"mrZQpbfo4RqEoBeJw4u5E9u6CEJsycjEM5", new BigDecimal("0.2")));
-		*/
-		/*while(bt.sendtouser(87, 105, new BigDecimal("0.01"))){
-			
-		}*/
-		
-		//System.out.println(Bitcoin.jsonToJava("{\"minconf\":\"2\"}"));
-		
-		  
+		htx = session.beginTransaction();
+		from = (UserP) session.load(UserP.class, 1);
+		to = (UserP) session.load(UserP.class, 2);
+		System.out.println("To user: "+bt.sendtouser(from, to, new BigDecimal(10.12345678), session));
+		htx.commit();
 	}
 
 }
