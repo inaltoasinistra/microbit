@@ -243,6 +243,10 @@ public class Transactions {
 		return funds;
 	}
 	
+	public boolean isAddressValid(String address) {
+		return bc.validateaddress(address);
+	}
+	
 	
 	/**
 	 * @param args

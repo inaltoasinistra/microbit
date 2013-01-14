@@ -198,6 +198,21 @@ public class UserBean implements UserBeanRemote {
 		tx.commit();
 		return true;
 	}
+	
+	@Override
+	public boolean isAddressValid(String address) throws java.rmi.RemoteException {
+		if(transactions.isAddressValid(address)){
+			return true;
+		}
+		try {
+			int id = new Integer(address);
+			if(id != user.getId() && session.get(UserP.class, id)!=null) {
+				return true;
+			}
+		} catch(NumberFormatException e) {}
+		
+		return false; 
+	}
 
 	@Override
 	public Tx sendTo(String address, BigDecimal howMuch) throws RemoteException {

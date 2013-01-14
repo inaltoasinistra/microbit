@@ -187,7 +187,6 @@ public class LoginJB {
 	}
 
 	public String getRestoreForm() {
-		System.out.println("Blbl "+getContactAddress());
 		return htmlrestorecontact.replace("$ALIAS",getAlias()).replace("$ADDRESS", getContactAddress());
 	}
 	
@@ -218,6 +217,16 @@ public class LoginJB {
 			System.out.println("EJB server problem.");
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean isContactAddressValid() {
+		try {
+			return ub.isAddressValid(getContactAddress());
+		} catch (RemoteException e) {
+			System.out.println("EJB server problem.");
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public void setAddedContact(boolean addedContact) {

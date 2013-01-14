@@ -36,26 +36,34 @@
 			login.sendTo();
 		}
 	%>
-	User id: <jsp:getProperty name="login" property="id" />. Fund: <jsp:getProperty name="login" property="fund" />. <a href="index.jsp?contacts">contacts</a> <a href="logout.jsp">logout</a><br />
+	User id: <jsp:getProperty name="login" property="id" />.
+	Fund: <jsp:getProperty name="login" property="fund" />.
+	<% out.print(parameters.contains("history") ? "<a href=\"index.jsp\">contacts</a>" : ""); %>
+	<% out.print(!parameters.contains("history") ? "<a href=\"index.jsp?history\">history</a>" : ""); %>
+	<a href="logout.jsp">logout</a><br />
 	Deposit address: <jsp:getProperty name="login" property="address" /><br /><br />
 	<%
 		if(!parameters.contains("history")){
 	%><%
 			if(parameters.contains("newContact") || parameters.contains("restoreContact")){
 				// new contact!
-				login.addNewContact();
-				if(login.isAddedContact()) {
-					if(parameters.contains("newContact")) {
+				if(login.isContactAddressValid()) {
+					login.addNewContact();
+					if(login.isAddedContact()) {
+						if(parameters.contains("newContact")) {
 	%>Contact inserted<br /><%
-					} else {
+						} else {
 	%>Contact restored<br /><%					
+						}
+					} else {
+						if(parameters.contains("newContact")) {
+	%><font color="red">Contact not inserted</font><br /><%
+						} else {
+	%><font color="red">Contact not restored</font><br /><%					
+						}
 					}
 				} else {
-					if(parameters.contains("newContact")) {
-	%><font color="red">Contact not inserted</font><br /><%
-					} else {
-	%><font color="red">Contact not restored</font><br /><%					
-					}
+	%><font color="red">The address is not valid</font><br /><%				
 				}
 			} else if(parameters.contains("deleteContact")) {
 				login.removeContact();
