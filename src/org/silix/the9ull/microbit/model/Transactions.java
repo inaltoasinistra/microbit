@@ -71,28 +71,10 @@ public class Transactions {
 		return ok;
 	}
 
-	boolean sendtouser(UserP from, UserP to, BigDecimal amount) {
-		boolean ok=false;
-		
-		SessionFactory sessionFactory = SingletonSessionFactory.getSessionFactory();
-		Session session = sessionFactory.openSession(); 
-		Transaction htx = session.beginTransaction();
-		
-		ok = sendtouser(from,to,amount,session);
-		
-		htx.commit();
-		session.close();
-		
-		return ok;
-	}
-	boolean sendtouser(int fromid, int toid, BigDecimal amount) {
+	boolean sendtouser(int fromid, int toid, BigDecimal amount, Session session) {
 		boolean ok=false;
 		
 		UserP from, to;
-		
-		SessionFactory sessionFactory = SingletonSessionFactory.getSessionFactory();
-		Session session = sessionFactory.openSession(); 
-		Transaction htx = session.beginTransaction();
 		
 		Query q = session.createQuery("from UserP user where user.id="+fromid);
 		from = (UserP)q.list().get(0);
@@ -101,24 +83,16 @@ public class Transactions {
 		
 		ok = sendtouser(from,to,amount,session);
 		
-		htx.commit();
-		session.close();
-		
 		return ok;
 	}
 	
 
-	public Tx sendtoaddress(UserP from, String address, BigDecimal amount) {
+	public Tx sendtoaddress(UserP from, String address, BigDecimal amount, Session session) {
 		String txid = null;
 		Tx tx;
 		
 		if(fee==null) {
-			SessionFactory sessionFactory = SingletonSessionFactory.getSessionFactory();
-			Session session = sessionFactory.openSession(); 
-			Transaction htx = session.beginTransaction();
 			String sfee = (String) PersistenceUtility.dictGet("minimumfee", session);
-			htx.commit();
-			session.close();
 			if(sfee==null)
 				sfee = MINIMUMFEE;
 			fee = new BigDecimal(sfee);
@@ -136,12 +110,6 @@ public class Transactions {
 			tx.setTxid(txid);
 			
 			Collection<Map<String,Object>> txs = bc.listtransactions(); //recent transactions
-			
-
-			SessionFactory sessionFactory = SingletonSessionFactory.getSessionFactory();
-			Session session = sessionFactory.openSession(); 
-			Transaction htx = session.beginTransaction();
-		
 			
 			for(Map<String,Object> t : txs){
 				if(txid.equals((String)t.get("txid")) && 
@@ -190,9 +158,6 @@ public class Transactions {
 				}
 			}
 			
-			htx.commit();
-			session.close();
-			
 			return tx;
 		}
 		
@@ -204,14 +169,10 @@ public class Transactions {
 	}
 	
 
-	public Map<String,BigDecimal> updatefunds(boolean all) {
+	public Map<String,BigDecimal> updatefunds(boolean all,Session session) {
 		
 		Map<String,BigDecimal> funds = new HashMap<String,BigDecimal>(); // address, new fund
 		String lastblock = null;
-		
-		SessionFactory sessionFactory = SingletonSessionFactory.getSessionFactory();
-		Session session = sessionFactory.openSession();
-		Transaction htx = session.beginTransaction();
 		Query q;
 		
 		if(!all)
@@ -291,9 +252,6 @@ public class Transactions {
 		PersistenceUtility.dictSet("updatefundstime", "" + new Date().getTime(), session);
 		PersistenceUtility.dictSet("updatefundshumantime", "" + new Date(), session);
 		
-		htx.commit();
-		session.close();
-		
 		return funds;
 	}
 	
@@ -325,8 +283,13 @@ public class Transactions {
 		//		tx.getFee().multiply(new BigDecimal(-1))+" = "+
 		//		tx.getAmount().add(tx.getFee()).multiply(new BigDecimal(-1)));
 		//System.out.println(bc.getbalanceall());
+
+		SessionFactory sessionFactory = SingletonSessionFactory.getSessionFactory();
+		Session session = sessionFactory.openSession(); 
+		Transaction htx = session.beginTransaction();
 		
-		bt.updatefunds(false);
+		bt.updatefunds(false,session);
+		htx.commit();
 		
 		/*
 		SessionFactory sessionFactory = SingletonSessionFactory.getSessionFactory();
@@ -343,13 +306,17 @@ public class Transactions {
 
 		System.out.println(bt.sendtoaddress(user,"mrZQpbfo4RqEoBeJw4u5E9u6CEJsycjEM5", new BigDecimal("0.2")));
 		*/
+		htx = session.beginTransaction();
 		for(int i=0 ; i<2 ; i++){
-			System.out.println(bt.sendtouser(103, 105, new BigDecimal("1")));
-			System.out.println(bt.sendtouser(105, 88, new BigDecimal("0.4")));
-			System.out.println(bt.sendtouser(105, 88, new BigDecimal("0.6")));
-			System.out.println(bt.sendtouser(88, 104, new BigDecimal("1")));
-			System.out.println(bt.sendtouser(104, 103, new BigDecimal("1")));
+			System.out.println(bt.sendtouser(103, 105, new BigDecimal("1"),session));
+			System.out.println(bt.sendtouser(105, 88, new BigDecimal("0.4"),session));
+			System.out.println(bt.sendtouser(105, 88, new BigDecimal("0.6"),session));
+			System.out.println(bt.sendtouser(88, 104, new BigDecimal("1"),session));
+			System.out.println(bt.sendtouser(104, 103, new BigDecimal("1"),session));
 		}
+		htx.commit();
+		session.close();
+		
 		/*while(bt.sendtouser(87, 105, new BigDecimal("0.01"))){
 			
 		}*/
