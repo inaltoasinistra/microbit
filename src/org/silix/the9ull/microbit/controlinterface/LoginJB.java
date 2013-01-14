@@ -154,10 +154,16 @@ public class LoginJB {
 		
 	}
 
-	final static String htmldelete = "<form name=\"deleteContact\" action=\"index.jsp?contacts&deleteContact\" method=\"POST\">" +
+	final static String htmldelete = "<form name=\"deleteContact\" action=\"index.jsp?deleteContact\" method=\"POST\">" +
 			"<input type=\"hidden\" name=\"alias\" value=\"$ALIAS\" />" +
+			"<input type=\"hidden\" name=\"contactAddress\" value=\"$ADDRESS\" />" +
 			"<input type=\"submit\" value=\"x\" />" +
 			"</form>";
+	final static String htmlrestorecontact = "<form name=\"restoreContact\" action=\"index.jsp?restoreContact\" method=\"POST\">" +
+			"<input type=\"hidden\" name=\"alias\" value=\"$ALIAS\" />" +
+			"<input type=\"hidden\" name=\"contactAddress\" value=\"$ADDRESS\" />" +
+			"<input type=\"submit\" value=\"restore deleted contact\" />" +
+			"</form>"; 
 	final static String htmlsendto = "<form name=\"payment\" action=\"index.jsp?contacts&sendTo\" method=\"POST\">" +
 			"<input type=\"text\" name=\"howMuch\" value=\"0.00000000\" />" +
 			"<input type=\"hidden\" name=\"alias\" value=\"$ALIAS\" />" +
@@ -175,11 +181,16 @@ public class LoginJB {
 		List<List<String>> cc = contacts.get();
 		for(List<String> l : cc) {
 			l.add(0, htmlsendto.replace("$ALIAS", l.get(0)).replace("$ADDRESS", l.get(1))); // Old index 1
-			l.add(htmldelete.replace("$ALIAS", l.get(1))); // New index 1 (old 0)
+			l.add(htmldelete.replace("$ALIAS", l.get(1)).replace("$ADDRESS", l.get(2))); // New index 1 (old 0)
 		}
 		return HTMLUtilities.printTable(cc, header);
 	}
 
+	public String getRestoreForm() {
+		System.out.println("Blbl "+getContactAddress());
+		return htmlrestorecontact.replace("$ALIAS",getAlias()).replace("$ADDRESS", getContactAddress());
+	}
+	
 	public String getContactAddress() {
 		return contactAddress;
 	}

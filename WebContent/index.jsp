@@ -39,20 +39,28 @@
 	User id: <jsp:getProperty name="login" property="id" />. Fund: <jsp:getProperty name="login" property="fund" />. <a href="index.jsp?contacts">contacts</a> <a href="logout.jsp">logout</a><br />
 	Deposit address: <jsp:getProperty name="login" property="address" /><br /><br />
 	<%
-		if(parameters.contains("contacts")){
+		if(!parameters.contains("history")){
 	%><%
-			if(parameters.contains("newContact")){
+			if(parameters.contains("newContact") || parameters.contains("restoreContact")){
 				// new contact!
 				login.addNewContact();
 				if(login.isAddedContact()) {
+					if(parameters.contains("newContact")) {
 	%>Contact inserted<br /><%
+					} else {
+	%>Contact restored<br /><%					
+					}
 				} else {
-	%><font color="red">Contact not inserted</font><br /><%		
+					if(parameters.contains("newContact")) {
+	%><font color="red">Contact not inserted</font><br /><%
+					} else {
+	%><font color="red">Contact not restored</font><br /><%					
+					}
 				}
 			} else if(parameters.contains("deleteContact")) {
 				login.removeContact();
 				if(login.isRemovedContact()) {
-	%>Contact removed<br /><%				
+	%>Contact removed <jsp:getProperty name="login" property="restoreForm" /><br /><%				
 				} else {
 	%><font color="red">Contact not removed</font><br /><%				
 				}
