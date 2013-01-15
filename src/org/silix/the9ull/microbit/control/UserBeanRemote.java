@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 import org.silix.the9ull.microbit.model.ContactP;
+import org.silix.the9ull.microbit.model.HistoryP;
 import org.silix.the9ull.microbit.model.Tx;
 
 public interface UserBeanRemote extends javax.ejb.EJBObject {
@@ -12,6 +13,7 @@ public interface UserBeanRemote extends javax.ejb.EJBObject {
 	public BigDecimal getFund() throws java.rmi.RemoteException;
 	public Set<ContactP> getContacts() throws java.rmi.RemoteException;
 	public boolean newContact(String alias, String address) throws java.rmi.RemoteException;
+	public Set<HistoryP> getHistory(int fromRow, int toRow) throws java.rmi.RemoteException;
 	public boolean isAddressValid(String address) throws java.rmi.RemoteException;
 	public boolean removeContact(String alias) throws java.rmi.RemoteException;
 	public Tx sendTo(String address, BigDecimal howMuch) throws java.rmi.RemoteException;

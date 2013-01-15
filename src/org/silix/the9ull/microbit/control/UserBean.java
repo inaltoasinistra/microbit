@@ -3,6 +3,7 @@ package org.silix.the9ull.microbit.control;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.silix.the9ull.microbit.model.ContactP;
+import org.silix.the9ull.microbit.model.HistoryP;
 import org.silix.the9ull.microbit.model.PersistenceUtility;
 import org.silix.the9ull.microbit.model.SHA1;
 import org.silix.the9ull.microbit.model.SingletonSessionFactory;
@@ -109,6 +111,9 @@ public class UserBean implements UserBeanRemote {
 		// Login check
 		if(user==null)
 			return null;
+		Transaction htx = session.beginTransaction();
+		transactions.updatefunds(false, session);
+		htx.commit();
 		return user.getFund();
 	}
 	
@@ -280,5 +285,20 @@ public class UserBean implements UserBeanRemote {
 			System.out.println("UserBean: to address "+tx);
 			return tx;
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Set<HistoryP> getHistory(int fromRow, int toRow) throws RemoteException {
+		// A query would be better o.o
+		// TODO: implement nRows
+		
+		Query q = session.createQuery("from HistoryP h where h.from="+user.getId()+" or h.to="+user.getId()+" order by h.when desc");
+		if(toRow>0) {
+			q.setFirstResult(fromRow);
+			q.setMaxResults(toRow);
+		}
+		// orderb by <field> desc
+		return new HashSet<HistoryP>((List<HistoryP>)q.list());
 	}	
 }

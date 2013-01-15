@@ -38,13 +38,14 @@
 	%>
 	User id: <jsp:getProperty name="login" property="id" />.
 	Fund: <jsp:getProperty name="login" property="fund" />.
-	<% out.print(parameters.contains("history") ? "<a href=\"index.jsp\">contacts</a>" : ""); %>
-	<% out.print(!parameters.contains("history") ? "<a href=\"index.jsp?history\">history</a>" : ""); %>
+	
+	<a href="index.jsp?history=30">history</a>
+	<% out.print(parameters.contains("history")
+			&& request.getParameter("history").equals("30") ? "<a href=\"index.jsp?history\">full history</a>" : ""); %>
 	<a href="logout.jsp">logout</a><br />
 	Deposit address: <jsp:getProperty name="login" property="address" /><br /><br />
 	<%
 		if(!parameters.contains("history")){
-	%><%
 			if(parameters.contains("newContact") || parameters.contains("restoreContact")){
 				// new contact!
 				if(login.isContactAddressValid()) {
@@ -85,6 +86,9 @@
 		<jsp:getProperty name="login" property="contactsTable" /><br />
 		<jsp:include page="newcontact.jsp" />
 	<%
+		} else {
+			// → parameters.contains("history")
+	%><jsp:include page="history.jsp" /><%
 		}
 	} else {
 	%>

@@ -1,5 +1,6 @@
 package org.silix.the9ull.microbit.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -26,7 +27,7 @@ CONSTRAINT `FK_to` FOREIGN KEY (`to`) REFERENCES `User` (`id`)
 
 @Entity
 @Table (name="History")
-public class HistoryP {
+public class HistoryP implements Comparable, Serializable {
 
 	@Id
 	private int id;
@@ -101,6 +102,12 @@ public class HistoryP {
 		return "HistoryP [id=" + id + ", from=" + from + ", to=" + to
 				+ ", when=" + when + ", howmuch=" + howmuch + ", txidcrc="
 				+ txidcrc + "]";
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		HistoryP o = (HistoryP) arg0;
+		return this.getWhen().compareTo(o.getWhen());
 	}
 
 

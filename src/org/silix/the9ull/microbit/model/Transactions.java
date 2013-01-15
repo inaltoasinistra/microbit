@@ -192,7 +192,7 @@ public class Transactions {
 				String address = (String)tx.get("address");
 				q = session.createQuery("from UserP user where user.deposit_address='"+address+"'");
 				if(q.list().size()==0) {
-					System.out.println("deposit_address sconosciuto: "+address);
+					System.out.println("Unknown deposit_address: "+address);
 					// Save new funds only in funds variable
 					funds.put(address, new BigDecimal((Double)tx.get("amount")).setScale(8,BigDecimal.ROUND_HALF_DOWN));
 					continue;
@@ -206,12 +206,12 @@ public class Transactions {
 				// Is history object already persistance?
 				q = session.createQuery("from HistoryP h where h.txidcrc="+history.getTxidcrc());
 				if(q.list().size()>0){
-					System.out.println("Oh, crc trovato!");
+					//xSystem.out.println("Oh, crc trovato!");
 					boolean exists = false;
 					for(Object o : q.list()) {
 						HistoryP h = (HistoryP)o;
-						System.out.println("for interno :o "+h);
-						System.out.println(""+history);
+						//System.out.println("for interno :o "+h);
+						//System.out.println(""+history);
 						
 						if( h.getFrom().equals(history.getFrom()) &&
 								h.getTo().equals(history.getTo()) &&

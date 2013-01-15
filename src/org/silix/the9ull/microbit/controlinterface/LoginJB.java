@@ -4,10 +4,12 @@ import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.silix.the9ull.microbit.control.GetInfoBeanRemote;
 import org.silix.the9ull.microbit.control.UserBeanRemote;
+import org.silix.the9ull.microbit.model.HistoryP;
 import org.silix.the9ull.microbit.model.Tx;
 
 // Java Bean
@@ -30,6 +32,7 @@ public class LoginJB {
 	private boolean sentTo;
 	private BigDecimal fee;
 	
+	private String historyTableRows;
 
 	private Contacts contacts;
 	
@@ -137,6 +140,7 @@ public class LoginJB {
 
 	public String getFund() {
 		System.out.println("LoginJB: updateFund");
+		
 		try {
 			return ub.getFund().toPlainString();
 		} catch (RemoteException e) {
@@ -326,5 +330,82 @@ public class LoginJB {
 	public void setFee(BigDecimal fee) {
 		this.fee = fee;
 	}
-	
+
+
+	public String getHistoryTable() {
+		Set<HistoryP> history = null;
+		List<List<String>> table = new LinkedList<List<String>>();
+		List<String> header =  new LinkedList<String>();
+		List<String> l;
+		
+		String nRawsS = getHistoryTableRows();
+		int nRaws = 0;
+		if(!nRawsS.equals("")) {
+			try {
+				nRaws = new Integer(nRawsS);
+			} catch(NumberFormatException e){}
+		}
+		
+		try {
+			history = ub.getHistory(0, nRaws);
+		} catch (RemoteException e) {
+			System.out.println("EJB server problem.");
+			e.printStackTrace();
+			return null;
+		}
+		
+		header.add("From user");
+		header.add("To user");
+		header.add("Date");
+		header.add("Amoun");
+		header.add("Fee");
+		
+		BigDecimal howMuch, fee;
+		int from_id, to_id;
+		String from_str, to_str;
+		String external = "external";
+		for(HistoryP h : history) {
+			l = new LinkedList<String>();
+			from_id = h.getFrom().getId();
+			to_id = h.getTo().getId();
+			howMuch = h.getHowmuch();
+			if(from_id==to_id){
+				//External transaction
+				if(howMuch.compareTo(new BigDecimal(0))<0) {
+					// Send
+					from_str = ""+from_id;
+					to_str = external;
+				} else {
+					// Receive
+					from_str = external;
+					to_str = ""+to_id;
+				}
+			} else {
+				from_str = ""+from_id;
+				to_str = ""+to_id;
+			}
+			l.add(from_str.equals(""+getId()) ? "me" : from_str);
+			l.add(to_str.equals(""+getId()) ? "me" : to_str);
+			l.add(""+h.getWhen());
+			l.add(howMuch.signum()>0 ? howMuch.toPlainString() : howMuch.negate().toPlainString());
+			fee = h.getFee();
+			if(fee==null)
+				l.add("");
+			else
+				l.add(fee.signum()>0 ? fee.toPlainString() : fee.negate().toPlainString());
+			table.add(l);
+		}
+		
+		return HTMLUtilities.printTable(table, header);
+	}
+
+
+	public String getHistoryTableRows() {
+		return historyTableRows;
+	}
+
+
+	public void setHistoryTableRows(String historyTableRows) {
+		this.historyTableRows = historyTableRows;
+	}
 }

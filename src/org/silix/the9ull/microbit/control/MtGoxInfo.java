@@ -122,10 +122,8 @@ public class MtGoxInfo {
 		    while ((line = dis.readLine()) != null) {
 		    	buffer += line;
 		    }
-		} catch (MalformedURLException mue) {
-		     mue.printStackTrace();
-		} catch (IOException ioe) {
-		     ioe.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("Network problems");
 		} finally {
 		    try {
 		        is.close();
@@ -168,6 +166,10 @@ public class MtGoxInfo {
 		}
 		
 		String json = download("https://mtgox.com/api/1/BTC"+currency+"/ticker");
+		if(json.equals("")) {
+			tx.commit();
+			return false;
+		}
 		
 		@SuppressWarnings("unchecked")
 		Map<String,Object> o = 
