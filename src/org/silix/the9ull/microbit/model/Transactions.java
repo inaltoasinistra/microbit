@@ -2,6 +2,7 @@ package org.silix.the9ull.microbit.model;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class Transactions {
 	}
 	
 	public boolean sendtouser(UserP from, UserP to, BigDecimal amount, Session session) {
-		boolean ok=false;
+		boolean ok = false;
 		BigDecimal fee;
 		String fee_s = PersistenceUtility.dictGet("internalfee", session);
 		
@@ -54,19 +55,24 @@ public class Transactions {
 			System.out.println("Transaction: #55");
 			from.setFund(from.getFund().subtract(amount).subtract(fee));
 			to.setFund(to.getFund().add(amount));
-			
+
 			HistoryP history = new HistoryP();
 			history.setFrom(from);
 			history.setTo(to);
 			history.setHowmuch(amount);
-			history.setWhen(new Date());
+			//history.setWhen(new Date());
+			history.setWhen(new Timestamp(new Date().getTime()/1000*1000));
 			if(fee.signum()!=0) //fee!=0
 				history.setFee(fee);
+			
+			from.getHistory_to().add(history);
+			// It is not necessary update "to" history
 			
 			session.update(from);
 			session.update(to);
 			session.save(history);
-			ok=true;
+			
+			ok = true;
 		}
 		return ok;
 	}
@@ -136,6 +142,7 @@ public class Transactions {
 					
 					//update fund
 					from.setFund(from.getFund().add(fee).add(tx.getAmount()));
+					from.getHistory_to().add(history);
 					
 					session.save(history);
 					session.update(from);

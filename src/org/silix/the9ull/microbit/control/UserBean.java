@@ -260,7 +260,9 @@ public class UserBean implements UserBeanRemote {
 				htx.commit();
 				return null;
 			}
+			 
 			if(transactions.sendtouser(user, toUser, howMuch, session)){
+				
 				tx = new Tx();
 				System.out.println("User transaction 3.");
 				String internalFee = PersistenceUtility.dictGet("internalfee", session);
@@ -290,9 +292,7 @@ public class UserBean implements UserBeanRemote {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Set<HistoryP> getHistory(int fromRow, int toRow) throws RemoteException {
-		// A query would be better o.o
-		// TODO: implement nRows
-		
+
 		Query q = session.createQuery("from HistoryP h where h.from="+user.getId()+" or h.to="+user.getId()+" order by h.when desc");
 		if(toRow>0) {
 			q.setFirstResult(fromRow);

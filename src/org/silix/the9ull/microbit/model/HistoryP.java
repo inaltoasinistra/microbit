@@ -78,7 +78,7 @@ public class HistoryP implements Comparable, Serializable {
 	}
 
 	public void setHowmuch(BigDecimal howmuch) {
-		this.howmuch = howmuch;
+		this.howmuch = howmuch!=null ? howmuch.setScale(8,BigDecimal.ROUND_HALF_DOWN) : null;
 	}
 
 	public BigDecimal getFee() {
@@ -86,7 +86,7 @@ public class HistoryP implements Comparable, Serializable {
 	}
 
 	public void setFee(BigDecimal fee) {
-		this.fee = fee;
+		this.fee = fee!=null ? fee.setScale(8,BigDecimal.ROUND_HALF_DOWN) : null;
 	}
 
 	public long getTxidcrc() {
