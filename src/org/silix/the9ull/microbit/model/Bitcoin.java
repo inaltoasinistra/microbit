@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.net.Authenticator;
 import java.net.ConnectException;
 import java.net.PasswordAuthentication;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,8 +66,12 @@ public class Bitcoin {
 	}
 	
 	public String sendtoaddress(String address, BigDecimal amount) {
-		return (String) proxy.call("sendtoaddress", address, amount, "From Microbit (com.googlecode.jj1)");
+		return (String) proxy.call("sendtoaddress", address, amount, "From Microbit (com.googlecode.jj1), sendtoaddress");
 	}
+	public String sendtoaddress(int user_id, String address, BigDecimal amount) {
+		return (String) proxy.call("sendfrom", "user"+user_id, address, amount);
+	}
+	
 	
 	String getnewaddress(String account) {
 		String result;
@@ -86,6 +91,7 @@ public class Bitcoin {
 		return (String) proxy.call("getblockhash",index);
 	}
 	
+	@SuppressWarnings("unchecked")
 	Map<String,Object> listsinceblock(String hash) {
 		Map<String,Object> result; // "transactions" : {tx obj (see getTx)}, "lastblock" : "hash"
 		if(hash==null)
@@ -95,6 +101,7 @@ public class Bitcoin {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	Map<String,Object> getblock(String hash){
 		return (Map<String,Object>)proxy.call("getblock",hash);
 	}
@@ -111,12 +118,25 @@ public class Bitcoin {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	HashMap<String,Double> listaccounts() {
 		return (HashMap<String,Double>) proxy.call("listaccounts",minconf);
 	}
 	
+	void movetoaccount(BigDecimal amount, int user_id) {
+		proxy.call("move","","user"+user_id,amount);
+	}
+	
+	@SuppressWarnings("unchecked")
 	Collection<Map<String,Object>> listtransactions() {
 		return (Collection<Map<String,Object>>) proxy.call("listtransactions","",50);
+	}
+	@SuppressWarnings("unchecked")
+	Map<String,Object> lasttransaction(int user_id) {
+		Collection<Map<String,Object>> ret = (Collection<Map<String,Object>>) proxy.call("listtransactions","user"+user_id,1);
+		if(ret==null || ret.isEmpty())
+			return null;
+		return new ArrayList<Map<String, Object>>(ret).get(0);
 	}
 	
 	public long getblockcount() {

@@ -61,7 +61,7 @@ public class Transactions {
 			history.setTo(to);
 			history.setHowmuch(amount);
 			//history.setWhen(new Date());
-			history.setWhen(new Timestamp(new Date().getTime()/1000*1000));
+			history.setWhen(new Timestamp(new Date().getTime()));
 			if(fee.signum()!=0) //fee!=0
 				history.setFee(fee);
 			
@@ -79,7 +79,9 @@ public class Transactions {
 
 	public Tx sendtoaddress(UserP from, String address, BigDecimal amount, Session session) {
 		String txid = null;
+		boolean found = false;
 		Tx tx;
+		
 		
 		if(fee==null) {
 			String sfee = (String) PersistenceUtility.dictGet("minimumfee", session);
@@ -89,19 +91,32 @@ public class Transactions {
 			System.out.println("Transactions: Fee: "+fee);
 		}
 			
+		assert(fee.signum()<0);
 		if(bc.validateaddress(address)
-				&& bc.getbalanceall().compareTo(amount.add(fee)) >= 0
-				&& from.getFund().compareTo(amount.add(fee)) >= 0
+				&& bc.getbalanceall().compareTo(amount.subtract(fee)) >= 0
+				&& from.getFund().compareTo(amount.subtract(fee)) >= 0
 				) {
 			
 			//
-			txid = bc.sendtoaddress(address, amount);
+			System.out.println("!!! deposit on account "+from.getDeposit_address()+" "+amount.subtract(fee));
+			//bc.sendtoaddress(from.getDeposit_address(), amount.subtract(fee));
+			bc.movetoaccount(amount.subtract(fee), from.getId());
+			System.out.println("!!! Pay from account");
+			txid = bc.sendtoaddress(from.getId(), address, amount);
+			//txid = bc.sendtoaddress(address, amount);
 			tx = new Tx();
 			tx.setTxid(txid);
 			
 			Collection<Map<String,Object>> txs = bc.listtransactions(); //recent transactions
 			
+			Map<String,Object> lasttx = bc.lasttransaction(from.getId());
+			
+			assert(lasttx!=null);
+			assert(txid.equals( (String)lasttx.get("txid")) );
+			
 			for(Map<String,Object> t : txs){
+				System.out.println("!!! recent tx >>>  "+(String)t.get("txid"));
+				
 				if(txid.equals((String)t.get("txid")) && 
 						address.equals((String)t.get("address")) && 
 						"send".equals((String)t.get("category"))) {
@@ -114,7 +129,7 @@ public class Transactions {
 					tx.setFee(new BigDecimal((Double)t.get("fee")).setScale(8,BigDecimal.ROUND_HALF_DOWN));
 					tx.setCategory("send");
 					//time: ms
-					Date time = new Date(1000 * (Long)t.get("time"));
+					Timestamp time = new Timestamp(1000 * (Long)t.get("time"));
 					tx.setWhen(time);
 					
 
@@ -144,11 +159,18 @@ public class Transactions {
 					from.setFund(from.getFund().add(fee).add(tx.getAmount()));
 					from.getHistory_to().add(history);
 					
+					System.out.println("!!! Save history");
 					session.save(history);
 					session.update(from);
 					
+					found = true;
 					break;
 				}
+			}
+			
+			if(!found) {
+				System.out.println("!!! Noooo! BTC Transaction not found!");
+				assert(found);
 			}
 			
 			return tx;
@@ -158,7 +180,7 @@ public class Transactions {
 		System.out.println("Valid address: "+bc.validateaddress(address));
 		System.out.println("Server Balance: "+bc.getbalanceall());
 		System.out.println("User Balance: "+from.getFund());
-		System.out.println("Amount+fee: "+amount.add(fee));
+		System.out.println("Amount+fee: "+amount.subtract(fee));
 		
 		return null;
 	}
