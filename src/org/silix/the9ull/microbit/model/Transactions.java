@@ -100,8 +100,9 @@ public class Transactions {
 			//
 			System.out.println("!!! deposit on account "+from.getDeposit_address()+" "+amount.subtract(fee));
 			//bc.sendtoaddress(from.getDeposit_address(), amount.subtract(fee));
-			bc.movetoaccount(amount.subtract(fee), from.getId());
-			System.out.println("!!! Pay from account");
+			bc.movetoaccount(amount.subtract(fee), from.getId()); // Never give errors
+			System.out.println("!!! Pay from account "+from.getId()+" "+address+" "+amount);
+		
 			txid = bc.sendtoaddress(from.getId(), address, amount);
 			//txid = bc.sendtoaddress(address, amount);
 			tx = new Tx();
@@ -110,6 +111,8 @@ public class Transactions {
 			Collection<Map<String,Object>> txs = bc.listtransactions(); //recent transactions
 			
 			Map<String,Object> lasttx = bc.lasttransaction(from.getId());
+			
+			System.out.println("Sostituire questa lasttx con il ciclo qui sotto XXX "+lasttx);
 			
 			assert(lasttx!=null);
 			assert(txid.equals( (String)lasttx.get("txid")) );
