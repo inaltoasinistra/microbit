@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.zip.CRC32;
 
 import org.hibernate.Query;
@@ -49,7 +48,7 @@ public class Transactions {
 		if(fee_s==null)
 			fee = new BigDecimal(0);
 		else
-			fee = new BigDecimal(fee_s);
+			fee = new BigDecimal(fee_s); // >=0
 		
 		if(amount.add(fee).compareTo(from.getFund()) <= 0){
 			System.out.println("Transaction: #55");
@@ -81,6 +80,7 @@ public class Transactions {
 		String txid = null;
 		Tx tx;
 		
+		assert(bc.getbalanceall().compareTo(from.getFund())>=0);
 		
 		if(fee==null) {
 			String sfee = (String) PersistenceUtility.dictGet("minimumfee", session);
@@ -106,12 +106,14 @@ public class Transactions {
 			
 			System.out.println("Transactions: id: "+txid);
 			
-			Collection<Map<String,Object>> txs = bc.listtransactions(from.getId(),5000,0); //recent transactions
 			Map<String,Object> t = null;
 			
-			//assert(txid.equals( (String)t.get("txid")) );
-			
-			for(Map<String,Object> ti : txs) {
+			//Collection<Map<String,Object>> txs = bc.listtransactions(from.getId(),5000,0); //recent transactions
+			BitcoinTransactionsIterator bt = new BitcoinTransactionsIterator(from.getId(), bc);
+			//for(Map<String,Object> ti : txs) {
+			while(bt.hasNext()) {
+				Map<String,Object> ti = (Map<String,Object>) bt.next();
+				System.out.println("!!! "+ti);
 				if(txid.equals((String)ti.get("txid")) && 
 						address.equals((String)ti.get("address")) && 
 						"send".equals((String)ti.get("category"))){
@@ -304,6 +306,10 @@ public class Transactions {
 		to = (UserP) session.load(UserP.class, 2);
 		System.out.println("To user: "+bt.sendtouser(from, to, new BigDecimal(10.12345678), session));
 		htx.commit();
+	}
+
+	public Bitcoin getBc() {
+		return bc;
 	}
 
 }

@@ -135,12 +135,10 @@ public class Bitcoin {
 	}
 
 	@SuppressWarnings("unchecked")
-	List<Map<String,Object>> listtransactions(int user_id, int count, int from) {
-		List<Map<String,Object>> ret = new ArrayList<Map<String,Object>>((Collection<Map<String,Object>>) proxy.call("listtransactions","user"+user_id,count,from));
-		Collections.reverse(ret);
-		return ret;
+	Collection<Map<String,Object>> listtransactions(int user_id, int count, int from) {
+		return (Collection<Map<String,Object>>) proxy.call("listtransactions","user"+user_id,count,from);
 	}
-	List<Map<String,Object>> listtransactions(int user_id) {
+	Collection<Map<String,Object>> listtransactions(int user_id) {
 		return listtransactions(user_id, 50, 0);
 	}
 
