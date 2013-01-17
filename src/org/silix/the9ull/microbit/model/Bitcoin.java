@@ -11,7 +11,9 @@ import java.net.ConnectException;
 import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -83,8 +85,8 @@ public class Bitcoin {
 	}
 	
 
-	double getbalance() {
-		return (Double) proxy.call("getbalance","",minconf);
+	double getbalance(String account) {
+		return (Double) proxy.call("getbalance",account,minconf);
 	}
 	
 	String getblockhash(long index) {
@@ -131,6 +133,17 @@ public class Bitcoin {
 	Collection<Map<String,Object>> listtransactions() {
 		return (Collection<Map<String,Object>>) proxy.call("listtransactions","",50);
 	}
+
+	@SuppressWarnings("unchecked")
+	List<Map<String,Object>> listtransactions(int user_id, int count, int from) {
+		List<Map<String,Object>> ret = new ArrayList<Map<String,Object>>((Collection<Map<String,Object>>) proxy.call("listtransactions","user"+user_id,count,from));
+		Collections.reverse(ret);
+		return ret;
+	}
+	List<Map<String,Object>> listtransactions(int user_id) {
+		return listtransactions(user_id, 50, 0);
+	}
+
 	@SuppressWarnings("unchecked")
 	Map<String,Object> lasttransaction(int user_id) {
 		Collection<Map<String,Object>> ret = (Collection<Map<String,Object>>) proxy.call("listtransactions","user"+user_id,1);
