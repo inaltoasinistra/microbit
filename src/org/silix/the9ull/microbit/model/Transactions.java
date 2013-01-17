@@ -92,7 +92,7 @@ public class Transactions {
 		System.out.println("sendtoaddress!");
 		assert(fee.signum()<0);
 		if(bc.validateaddress(address)
-				&& bc.getbalanceall().compareTo(amount.subtract(fee)) >= 0
+				&& bc.getbalance().compareTo(amount.subtract(fee)) >= 0
 				&& from.getFund().compareTo(amount.subtract(fee)) >= 0
 				) {
 			

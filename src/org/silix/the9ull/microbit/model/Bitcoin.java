@@ -111,10 +111,17 @@ public class Bitcoin {
 		return getblock(getblockhash(index));
 	}
 	
+	public BigDecimal getbalance() {
+		return new BigDecimal((Double)proxy.call("getbalance"));
+	}
+	
+	@Deprecated
 	public BigDecimal getbalanceall() {
 		BigDecimal balance = new BigDecimal(0.0);
 		for(double d: listaccounts().values()){
+			System.out.println("!!! "+d);
 			balance = balance.add(new BigDecimal(d));
+			System.out.println("!!! Balance "+balance);
 		}
 		return balance.setScale(8,BigDecimal.ROUND_HALF_DOWN);
 	}
