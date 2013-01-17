@@ -180,7 +180,7 @@ public class LoginJB {
 	public String getContactsTable() {
 		List<String> header = new LinkedList<String>();
 		header.add("Pay");
-		header.add("Alias");
+		header.add("Name");
 		header.add("Address");
 		header.add("Delete");
 		
