@@ -253,10 +253,10 @@ public class UserBean implements UserBeanRemote {
 				return null;
 			}
 
-			System.out.println("User transaction 1.");
+			System.out.println("UserBean: User transaction 1.");
 			toUser = (UserP) session.get(UserP.class, toUserId);
 			if(toUser==null) {
-				System.out.println("User transaction 2.");
+				System.out.println("UserBean: User transaction 2.");
 				htx.commit();
 				return null;
 			}
@@ -281,10 +281,10 @@ public class UserBean implements UserBeanRemote {
 		} else {
 			// Transaction to address
 			
-			System.out.println("Address transaction 1.");
+			System.out.println("UserBean: transaction");
 			tx = transactions.sendtoaddress(user, address, howMuch, session);
 			htx.commit();
-			System.out.println("UserBean: to address "+tx);
+			System.out.println("UserBean: to address » "+tx);
 			return tx;
 		}
 	}
