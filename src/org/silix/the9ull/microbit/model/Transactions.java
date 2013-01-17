@@ -97,7 +97,6 @@ public class Transactions {
 				) {
 			
 			
-			//bc.sendtoaddress(from.getDeposit_address(), amount.subtract(fee));
 			bc.movetoaccount(amount.subtract(fee), from.getId()); // Never give errors
 			
 			txid = bc.sendtoaddress(from.getId(), address, amount);
@@ -105,7 +104,9 @@ public class Transactions {
 			tx = new Tx();
 			tx.setTxid(txid);
 			
-			Collection<Map<String,Object>> txs = bc.listtransactions(from.getId(),50,0); //recent transactions
+			System.out.println("Transactions: id: "+txid);
+			
+			Collection<Map<String,Object>> txs = bc.listtransactions(from.getId(),5000,0); //recent transactions
 			Map<String,Object> t = null;
 			
 			//assert(txid.equals( (String)t.get("txid")) );
@@ -116,6 +117,8 @@ public class Transactions {
 						"send".equals((String)ti.get("category"))){
 					t = ti;
 					break;
+				} else {
+					System.out.println("Id "+txid+" not fund. Found: "+ti.get("txid"));
 				}
 			}
 			
