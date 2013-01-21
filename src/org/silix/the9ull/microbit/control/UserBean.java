@@ -31,6 +31,8 @@ import org.silix.the9ull.microbit.model.Transactions;
 import org.silix.the9ull.microbit.model.Tx;
 import org.silix.the9ull.microbit.model.UserP;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 @Stateful
 @Named
 public class UserBean implements UserBeanRemote {
@@ -41,20 +43,17 @@ public class UserBean implements UserBeanRemote {
 	
 	@Override
 	public EJBHome getEJBHome() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public Handle getHandle() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public Object getPrimaryKey() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class UserBean implements UserBeanRemote {
 
 	@Override
 	public void remove() throws RemoteException, RemoveException {
-		// TODO Auto-generated method stub		
+		System.out.println("Remove the EJB UserBean");
 	}
 
 	@PostConstruct
