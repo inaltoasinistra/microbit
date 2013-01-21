@@ -1,12 +1,13 @@
 package org.silix.the9ull.microbit.control;
 
-import java.net.ConnectException;
+import java.rmi.RemoteException;
 
 import javax.ejb.Stateless;
 import javax.inject.Named;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.silix.the9ull.microbit.model.BitcoinConnectionError;
 import org.silix.the9ull.microbit.model.PersistenceUtility;
 import org.silix.the9ull.microbit.model.SingletonSessionFactory;
 import org.silix.the9ull.microbit.model.UserP;
@@ -16,7 +17,7 @@ import org.silix.the9ull.microbit.model.UserP;
 public class RegisterBean implements RegisterBeanRemote {
 
 	@Override
-	public UserP register(String email, String password) {
+	public UserP register(String email, String password) throws RemoteException {
 		
 		System.out.println("Registering a new user.");
 		
@@ -25,19 +26,19 @@ public class RegisterBean implements RegisterBeanRemote {
 		Session session = SingletonSessionFactory.getSession();
 		Transaction tx = session.beginTransaction();//needed by newUser()
 		
+	
 		try {
 			newUser = PersistenceUtility.newUser(email, password, session);
-			if(newUser==null){
-				tx.commit();
-				SingletonSessionFactory.closeSession(session);
-				return null;
-			}
-		} catch (ConnectException e) {
+		} catch (BitcoinConnectionError e) {
+			tx.rollback();
+			SingletonSessionFactory.closeSession(session);
+			throw new RemoteException();
+		}
+		if(newUser==null){
 			tx.commit();
 			SingletonSessionFactory.closeSession(session);
 			return null;
 		}
-		
 		tx.commit();
 		SingletonSessionFactory.closeSession(session);
 		

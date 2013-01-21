@@ -27,8 +27,9 @@ public class Main {
 	
 	/**
 	 * @param args
+	 * @throws BitcoinConnectionError 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws BitcoinConnectionError {
 		///
 		Session session = null;
 		SessionFactory sessionFactory;
@@ -129,12 +130,7 @@ public class Main {
 		tx.commit();
 		session.close();
 		
-		try {
-			Bitcoin bitcoin = new Bitcoin(false);
-		} catch (ConnectException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Bitcoin bitcoin = new Bitcoin(false);
 		
 	}
 

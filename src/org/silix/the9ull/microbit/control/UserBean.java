@@ -22,6 +22,7 @@ import javax.inject.Named;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.silix.the9ull.microbit.model.BitcoinConnectionError;
 import org.silix.the9ull.microbit.model.ContactP;
 import org.silix.the9ull.microbit.model.HistoryP;
 import org.silix.the9ull.microbit.model.PersistenceUtility;
@@ -77,6 +78,8 @@ public class UserBean implements UserBeanRemote {
 		} catch (IOException e) {
 			System.out.println("UserBean: Transactions obj not loaded");
 			e.printStackTrace();
+		} catch (BitcoinConnectionError e) {
+			e.printStackTrace();
 		}
 	}
 	@PrePassivate
@@ -111,7 +114,12 @@ public class UserBean implements UserBeanRemote {
 		if(user==null)
 			return null;
 		Transaction htx = session.beginTransaction();
-		transactions.updatefunds(false, session);
+		try {
+			transactions.updatefunds(false, session);
+		} catch (BitcoinConnectionError e) {
+			htx.rollback();
+			return null;
+		}
 		htx.commit();
 		return user.getFund();
 	}
@@ -205,8 +213,12 @@ public class UserBean implements UserBeanRemote {
 	
 	@Override
 	public boolean isAddressValid(String address) throws java.rmi.RemoteException {
-		if(transactions.isAddressValid(address)){
-			return true;
+		try {
+			if(transactions.isAddressValid(address)){
+				return true;
+			}
+		} catch (BitcoinConnectionError e1) {
+			throw new RemoteException("Bitcoin connection error");
 		}
 		try {
 			int id = new Integer(address);
@@ -281,8 +293,14 @@ public class UserBean implements UserBeanRemote {
 			// Transaction to address
 			
 			System.out.println("UserBean: transaction");
-			tx = transactions.sendtoaddress(user, address, howMuch, session);
-			htx.commit();
+			try {
+				tx = transactions.sendtoaddress(user, address, howMuch, session);
+				htx.commit();
+			} catch (BitcoinConnectionError e) {
+				htx.rollback();
+				tx = new Tx();
+				tx.setStrError("Bitcoin connection error");
+			}
 			System.out.println("UserBean: to address » "+tx);
 			return tx;
 		}

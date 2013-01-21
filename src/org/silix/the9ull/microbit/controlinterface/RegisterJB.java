@@ -1,5 +1,7 @@
 package org.silix.the9ull.microbit.controlinterface;
 
+import java.rmi.RemoteException;
+
 import org.silix.the9ull.microbit.control.RegisterBeanRemote;
 import org.silix.the9ull.microbit.model.UserP;
 
@@ -9,6 +11,9 @@ public class RegisterJB {
 	private String password;
 	private String confirm;
 	private int error;
+	/* 1 → Password not validated
+	 * 2 → RemoteException
+	 */
 	
 	private boolean registered = false;
 	
@@ -52,14 +57,20 @@ public class RegisterJB {
 
 				RegisterBeanRemote rb = EJBUtils.getRegister();
 				
-				UserP user = rb.register(getEmail(), getPassword());
+				UserP user = null;
+				try {
+					user = rb.register(getEmail(), getPassword());
+				} catch (RemoteException e) {
+					setError(2); // RemoteException
+					return false;
+				}
 				
 				// Take registration data
 				setNew_deposit_address(user.getDeposit_address());
 				setNew_id(user.getId());
 				registered = true;
 			} else {
-				error = 1; //Password non confermata
+				setError(1); // Password not validated
 			}
 		}
 		return registered;

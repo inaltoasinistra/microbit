@@ -33,6 +33,7 @@ public class LoginJB {
 	private String howMuch;
 	private boolean sentTo;
 	private BigDecimal fee;
+	private String strError;
 	
 	private String historyTableRows;
 
@@ -120,6 +121,8 @@ public class LoginJB {
 			} catch (RemoteException e) {
 				System.out.println("EJB server problem.");
 				e.printStackTrace();
+				setStrError("Server error");
+				return;
 			}	
 		}
 		else {
@@ -131,7 +134,9 @@ public class LoginJB {
 				this.logged = false;
 			} catch (RemoteException e) {
 				System.out.println("EJB server problem.");
-				e.printStackTrace();	
+				e.printStackTrace();
+				setStrError("Server error");
+				return;
 			}
 		}
 	}
@@ -144,20 +149,26 @@ public class LoginJB {
 		System.out.println("LoginJB: updateFund");
 		
 		try {
-			return ub.getFund().toPlainString();
-		} catch (RemoteException e) {
+			BigDecimal ret = ub.getFund(); 
+			if(ret==null) {
+				setStrError("Bitcon server error");
+				return "Error";
+			}
+			return ret.toPlainString(); 
+		} catch (Exception e) {
 			System.out.println("EJB server problem.");
-			e.printStackTrace();
+			setStrError("Server error");
 		}
-		return null;
+		return "";
 	}
 
 	public void setFund(String fund) {
 		// read only value
+		System.out.println("LoginJB: setFund: Read only value");
 	}
 
 	public void updateFund() {
-		
+		// TODO: ???
 	}
 
 	final static String htmldelete = "<form name=\"deleteContact\" action=\"index.jsp?deleteContact\" method=\"POST\">" +
@@ -185,6 +196,10 @@ public class LoginJB {
 		header.add("Delete");
 		
 		List<List<String>> cc = contacts.get();
+		if(cc==null) {
+			setStrError("Server error");
+			return "";
+		}
 		for(List<String> l : cc) {
 			l.add(0, htmlsendto.replace("$ALIAS", l.get(0)).replace("$ADDRESS", l.get(1))); // Old index 1
 			l.add(htmldelete.replace("$ALIAS", l.get(1)).replace("$ADDRESS", l.get(2))); // New index 1 (old 0)
@@ -212,6 +227,7 @@ public class LoginJB {
 			addedContact = false;
 			System.out.println("EJB server problem.");
 			e.printStackTrace();
+			setStrError("Server error");
 		}
 	}
 	
@@ -222,6 +238,7 @@ public class LoginJB {
 			setRemovedContact(false);
 			System.out.println("EJB server problem.");
 			e.printStackTrace();
+			setStrError("Server error");
 		}
 	}
 	
@@ -231,6 +248,7 @@ public class LoginJB {
 		} catch (RemoteException e) {
 			System.out.println("EJB server problem.");
 			e.printStackTrace();
+			setStrError("Server error");
 		}
 		return false;
 	}
@@ -267,6 +285,11 @@ public class LoginJB {
 		}
 		try {
 			Tx tx = ub.sendTo(contactAddress,hm);
+			if(tx.getStrError()!=null) {
+				setSentTo(false);
+				setStrError(tx.getStrError());
+				return;
+			}
 			if(tx!=null){
 				setSentTo(true);
 				BigDecimal f = tx.getFee();
@@ -283,6 +306,7 @@ public class LoginJB {
 			setSentTo(false);
 			System.out.println("EJB server problem.");
 			e.printStackTrace();
+			setStrError("Server error");
 		}
 	}
 	
@@ -431,4 +455,20 @@ public class LoginJB {
 	public void setHistoryTableRows(String historyTableRows) {
 		this.historyTableRows = historyTableRows;
 	}
+
+
+	private String htmlerror = "<font color=\"red\">$ERROR</font><br />";
+	public String getStrError() {
+		if(strError==null)
+			return "";
+		String ret = htmlerror.replace("$ERROR", strError);
+		setStrError(null); //return an error only once
+		return ret;
+	}
+
+
+	public void setStrError(String strError) {
+		this.strError = strError;
+	}
+	
 }

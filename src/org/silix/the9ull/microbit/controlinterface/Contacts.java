@@ -33,6 +33,7 @@ public class Contacts {
 		} catch (RemoteException e) {
 			System.out.println("Contacts: EJB server problem");
 			e.printStackTrace();
+			return null;
 		}
 		//Sort!
 		return contacts;

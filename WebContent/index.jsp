@@ -21,7 +21,8 @@
 	<%
 	if(!login.isLogged()){
 	%>
-	<a href="register.jsp">Register</a>
+	<a href="register.jsp">Register</a><br />
+	<jsp:getProperty name="login" property="strError" />
 	<% } %>
 	1BTC = <jsp:getProperty name="info" property="usd" /> USD;
 	1BTC = <jsp:getProperty name="info" property="eur" /> EUR;
@@ -44,6 +45,7 @@
 			&& request.getParameter("history").equals("30") ? "<a href=\"index.jsp?history\">full history</a>" : ""); %>
 	<a href="logout.jsp">logout</a><br />
 	Deposit address: <jsp:getProperty name="login" property="address" /><br /><br />
+	<jsp:getProperty name="login" property="strError" />
 	<%
 		if(!parameters.contains("history")){
 			if(parameters.contains("newContact") || parameters.contains("restoreContact")){
@@ -62,6 +64,7 @@
 						} else {
 	%><font color="red">Contact not restored</font><br /><%					
 						}
+	%><jsp:getProperty name="login" property="strError" /><%
 					}
 				} else {
 	%><font color="red">The address is not valid</font><br /><%				
@@ -71,7 +74,8 @@
 				if(login.isRemovedContact()) {
 	%>Contact removed <jsp:getProperty name="login" property="restoreForm" /><br /><%				
 				} else {
-	%><font color="red">Contact not removed</font><br /><%				
+	%><font color="red">Contact not removed</font><br />
+	<jsp:getProperty name="login" property="strError" /><%				
 				}
 			} else if(parameters.contains("sendTo")) {
 				if(login.isSentTo()){
@@ -84,6 +88,7 @@
 			}
 	%>
 		<jsp:getProperty name="login" property="contactsTable" /><br />
+		<jsp:getProperty name="login" property="strError" />
 		<jsp:include page="newcontact.jsp" />
 	<%
 		} else {

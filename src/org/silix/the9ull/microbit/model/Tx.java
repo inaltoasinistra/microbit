@@ -15,10 +15,13 @@ public class Tx {
 	private String category;
 	private Date when;
 	
+	private String strError;
+
 	@Override
 	public String toString() {
 		return "Tx [txid=" + txid + ", fee=" + fee + ", amount=" + amount
-				+ ", address=" + address + ", category=" + category + "]";
+				+ ", address=" + address + ", category=" + category + ", when="
+				+ when + ", strError=" + strError + "]";
 	}
 
 	public String getTxid() {
@@ -59,6 +62,14 @@ public class Tx {
 
 	public void setWhen(Date when) {
 		this.when = when;
+	}
+
+	public String getStrError() {
+		return strError;
+	}
+
+	public void setStrError(String strError) {
+		this.strError = strError;
 	}
 	
 }
