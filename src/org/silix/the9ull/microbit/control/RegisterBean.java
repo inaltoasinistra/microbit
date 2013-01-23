@@ -7,7 +7,7 @@ import javax.inject.Named;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.silix.the9ull.microbit.model.BitcoinConnectionError;
+import org.silix.the9ull.microbit.model.BitcoinConnectionException;
 import org.silix.the9ull.microbit.model.PersistenceUtility;
 import org.silix.the9ull.microbit.model.SingletonSessionFactory;
 import org.silix.the9ull.microbit.model.UserP;
@@ -29,7 +29,7 @@ public class RegisterBean implements RegisterBeanRemote {
 	
 		try {
 			newUser = PersistenceUtility.newUser(email, password, session);
-		} catch (BitcoinConnectionError e) {
+		} catch (BitcoinConnectionException e) {
 			tx.rollback();
 			SingletonSessionFactory.closeSession(session);
 			throw new RemoteException();

@@ -22,7 +22,7 @@ import javax.inject.Named;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.silix.the9ull.microbit.model.BitcoinConnectionError;
+import org.silix.the9ull.microbit.model.BitcoinConnectionException;
 import org.silix.the9ull.microbit.model.ContactP;
 import org.silix.the9ull.microbit.model.HistoryP;
 import org.silix.the9ull.microbit.model.PersistenceUtility;
@@ -78,7 +78,7 @@ public class UserBean implements UserBeanRemote {
 		} catch (IOException e) {
 			System.out.println("UserBean: Transactions obj not loaded");
 			e.printStackTrace();
-		} catch (BitcoinConnectionError e) {
+		} catch (BitcoinConnectionException e) {
 			e.printStackTrace();
 		}
 	}
@@ -116,7 +116,7 @@ public class UserBean implements UserBeanRemote {
 		Transaction htx = session.beginTransaction();
 		try {
 			transactions.updatefunds(false, session);
-		} catch (BitcoinConnectionError e) {
+		} catch (BitcoinConnectionException e) {
 			htx.rollback();
 			return null;
 		}
@@ -217,7 +217,7 @@ public class UserBean implements UserBeanRemote {
 			if(transactions.isAddressValid(address)){
 				return true;
 			}
-		} catch (BitcoinConnectionError e1) {
+		} catch (BitcoinConnectionException e1) {
 			throw new RemoteException("Bitcoin connection error");
 		}
 		try {
@@ -298,7 +298,7 @@ public class UserBean implements UserBeanRemote {
 			try {
 				tx = transactions.sendtoaddress(user, address, howMuch, session);
 				htx.commit();
-			} catch (BitcoinConnectionError e) {
+			} catch (BitcoinConnectionException e) {
 				htx.rollback();
 				tx = new Tx();
 				tx.setStrError("Bitcoin connection error");

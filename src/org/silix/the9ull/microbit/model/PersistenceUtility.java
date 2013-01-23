@@ -30,7 +30,7 @@ public class PersistenceUtility {
 		session.saveOrUpdate(pair);
 	}
 	
-	public static UserP newUser(String email, String password, Session session) throws BitcoinConnectionError {
+	public static UserP newUser(String email, String password, Session session) throws BitcoinConnectionException {
 		// TODO: move this code out of here
 		int id_user;
 		Bitcoin bc = new Bitcoin(true);

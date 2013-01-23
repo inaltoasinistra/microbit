@@ -31,7 +31,7 @@ public class Bitcoin {
 	private int minconf = 2;
 	private ServiceProxy proxy;
 
-	public Bitcoin(boolean authentication) throws BitcoinConnectionError {
+	public Bitcoin(boolean authentication) throws BitcoinConnectionException {
 		
 		System.out.println("new Bitcoin()");
 	
@@ -57,33 +57,33 @@ public class Bitcoin {
 		System.out.println("Bitcoin: init done");
 	}
 	
-	boolean validateaddress(String address) throws BitcoinConnectionError {
+	boolean validateaddress(String address) throws BitcoinConnectionException {
 		try {
 			@SuppressWarnings("unchecked")
 			HashMap<String,Object> result = (HashMap<String,Object>) proxy.call("validateaddress",address);
 			return (Boolean)result.get("isvalid");
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
 	
-	public String sendtoaddress(String address, BigDecimal amount) throws BitcoinConnectionError {
+	public String sendtoaddress(String address, BigDecimal amount) throws BitcoinConnectionException {
 		try {
 			return (String) proxy.call("sendtoaddress", address, amount, "From Microbit (com.googlecode.jj1), sendtoaddress");
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
-	public String sendtoaddress(int user_id, String address, BigDecimal amount) throws BitcoinConnectionError {
+	public String sendtoaddress(int user_id, String address, BigDecimal amount) throws BitcoinConnectionException {
 		try {
 			return (String) proxy.call("sendfrom", "user"+user_id, address, amount);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
 	
 	
-	String getnewaddress(String account) throws BitcoinConnectionError {
+	String getnewaddress(String account) throws BitcoinConnectionException {
 		String result;
 		try {
 			if(account==null)
@@ -91,30 +91,30 @@ public class Bitcoin {
 			else
 				result = (String) proxy.call("getnewaddress", account);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 		return result;
 	}
 	
 
-	double getbalance(String account) throws BitcoinConnectionError {
+	double getbalance(String account) throws BitcoinConnectionException {
 		try {
 			return (Double) proxy.call("getbalance",account,minconf);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
 	
-	String getblockhash(long index) throws BitcoinConnectionError {
+	String getblockhash(long index) throws BitcoinConnectionException {
 		try {
 			return (String) proxy.call("getblockhash",index);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	Map<String,Object> listsinceblock(String hash) throws BitcoinConnectionError {
+	Map<String,Object> listsinceblock(String hash) throws BitcoinConnectionException {
 		Map<String,Object> result; // "transactions" : {tx obj (see getTx)}, "lastblock" : "hash"
 		try {
 			if(hash==null)
@@ -122,33 +122,33 @@ public class Bitcoin {
 			else
 				result = (Map<String,Object>)proxy.call("listsinceblock", hash);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
-	Map<String,Object> getblock(String hash) throws BitcoinConnectionError {
+	Map<String,Object> getblock(String hash) throws BitcoinConnectionException {
 		try {
 			return (Map<String,Object>)proxy.call("getblock",hash);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
-	Map<String,Object> getblock(long index)  throws BitcoinConnectionError {
+	Map<String,Object> getblock(long index)  throws BitcoinConnectionException {
 		return getblock(getblockhash(index));
 	}
 	
-	public BigDecimal getbalance() throws BitcoinConnectionError {
+	public BigDecimal getbalance() throws BitcoinConnectionException {
 		try {
 			return new BigDecimal((Double)proxy.call("getbalance"));
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
 	
 	@Deprecated
-	public BigDecimal getbalanceall() throws BitcoinConnectionError {
+	public BigDecimal getbalanceall() throws BitcoinConnectionException {
 		BigDecimal balance = new BigDecimal(0.0);
 		for(double d: listaccounts().values()){
 			System.out.println("!!! "+d);
@@ -160,61 +160,61 @@ public class Bitcoin {
 	
 	
 	@SuppressWarnings("unchecked")
-	HashMap<String,Double> listaccounts() throws BitcoinConnectionError {
+	HashMap<String,Double> listaccounts() throws BitcoinConnectionException {
 		try {
 			return (HashMap<String,Double>) proxy.call("listaccounts",minconf);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
 	
-	void movetoaccount(BigDecimal amount, int user_id) throws BitcoinConnectionError {
+	void movetoaccount(BigDecimal amount, int user_id) throws BitcoinConnectionException {
 		try {
 			proxy.call("move","","user"+user_id,amount);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	Collection<Map<String,Object>> listtransactions() throws BitcoinConnectionError {
+	Collection<Map<String,Object>> listtransactions() throws BitcoinConnectionException {
 		try {
 			return (Collection<Map<String,Object>>) proxy.call("listtransactions","",50);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	Collection<Map<String,Object>> listtransactions(int user_id, int count, int from) throws BitcoinConnectionError {
+	Collection<Map<String,Object>> listtransactions(int user_id, int count, int from) throws BitcoinConnectionException {
 		try {
 			return (Collection<Map<String,Object>>) proxy.call("listtransactions","user"+user_id,count,from);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
-	Collection<Map<String,Object>> listtransactions(int user_id) throws BitcoinConnectionError {
+	Collection<Map<String,Object>> listtransactions(int user_id) throws BitcoinConnectionException {
 		return listtransactions(user_id, 50, 0);
 	}
 
 	@SuppressWarnings("unchecked")
-	Map<String,Object> lasttransaction(int user_id) throws BitcoinConnectionError {
+	Map<String,Object> lasttransaction(int user_id) throws BitcoinConnectionException {
 		Collection<Map<String,Object>> ret;
 		try {
 			ret = (Collection<Map<String,Object>>) proxy.call("listtransactions","user"+user_id,1);
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 		if(ret==null || ret.isEmpty())
 			return null;
 		return new ArrayList<Map<String, Object>>(ret).get(0);
 	}
 	
-	public long getblockcount() throws BitcoinConnectionError {
+	public long getblockcount() throws BitcoinConnectionException {
 		try {
 		return (Long) proxy.call("getblockcount");
 		} catch (JsonRpcException e) {
-			throw new BitcoinConnectionError();
+			throw new BitcoinConnectionException();
 		}
 	}
 	
@@ -262,7 +262,7 @@ public class Bitcoin {
 	
 	/**
 	 * @param args
-	 * @throws BitcoinConnectionError 
+	 * @throws BitcoinConnectionException 
 	 * @throws ConnectException 
 	 */
 	public static void main(String[] args) {
@@ -277,7 +277,7 @@ public class Bitcoin {
 		Bitcoin bc = null;
 		try {
 			bc = new Bitcoin(false);
-		} catch (BitcoinConnectionError e) {
+		} catch (BitcoinConnectionException e) {
 			System.out.println("Bitcoin server connection problem");
 			return;
 		}
@@ -307,7 +307,7 @@ public class Bitcoin {
 
 		try {
 			System.out.println(bc.sendtoaddress("mrZQpbfo4RqEoBeJw4u5E9u6CEJsycjEM5", new BigDecimal("0.2")));
-		} catch (BitcoinConnectionError e) {
+		} catch (BitcoinConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

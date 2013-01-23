@@ -27,14 +27,14 @@ public class Transactions {
 	
 	static private BigDecimal fee = null;
 	
-	private Transactions() throws IOException, BitcoinConnectionError {
+	private Transactions() throws IOException, BitcoinConnectionException {
 		
 		Bitcoin.readRpcCredentials();
 		bc = new Bitcoin(false);
 		
 	}
 	
-	static public Transactions getInstance() throws IOException, BitcoinConnectionError {
+	static public Transactions getInstance() throws IOException, BitcoinConnectionException {
 		if(instance==null)
 			instance = new Transactions();
 		return instance;
@@ -76,7 +76,7 @@ public class Transactions {
 		return ok;
 	}
 
-	public Tx sendtoaddress(UserP from, String address, BigDecimal amount, Session session) throws BitcoinConnectionError {
+	public Tx sendtoaddress(UserP from, String address, BigDecimal amount, Session session) throws BitcoinConnectionException {
 		String txid = null;
 		Tx tx;
 		
@@ -182,7 +182,7 @@ public class Transactions {
 	}
 	
 
-	public Map<String,BigDecimal> updatefunds(boolean all,Session session) throws BitcoinConnectionError {
+	public Map<String,BigDecimal> updatefunds(boolean all,Session session) throws BitcoinConnectionException {
 		
 		Map<String,BigDecimal> funds = new HashMap<String,BigDecimal>(); // address, new fund
 		String lastblock = null;
@@ -268,7 +268,7 @@ public class Transactions {
 		return funds;
 	}
 	
-	public boolean isAddressValid(String address) throws BitcoinConnectionError {
+	public boolean isAddressValid(String address) throws BitcoinConnectionException {
 		return bc.validateaddress(address);
 	}
 	
@@ -276,9 +276,9 @@ public class Transactions {
 	/**
 	 * @param args
 	 * @throws IOException 
-	 * @throws BitcoinConnectionError 
+	 * @throws BitcoinConnectionException 
 	 */
-	public static void main(String[] args) throws IOException, BitcoinConnectionError {
+	public static void main(String[] args) throws IOException, BitcoinConnectionException {
 		 
 		Transactions bt = Transactions.getInstance();
 		

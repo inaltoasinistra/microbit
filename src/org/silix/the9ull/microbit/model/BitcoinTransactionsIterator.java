@@ -16,14 +16,14 @@ public class BitcoinTransactionsIterator implements Iterator<Map<String,Object>>
 	
 	private final static int COUNT = 1;
 	
-	public BitcoinTransactionsIterator(int user_id, Bitcoin bc) throws BitcoinConnectionError {
+	public BitcoinTransactionsIterator(int user_id, Bitcoin bc) throws BitcoinConnectionException {
 		this.user_id = user_id;
 		this.bc = bc;
 		fillBuffer();
 		System.out.println("!!! Inited the iterator");
 	}
 	
-	private void fillBuffer() throws BitcoinConnectionError {
+	private void fillBuffer() throws BitcoinConnectionException {
 		System.out.println("!!! Filling the buffer");
 		buffer = bc.listtransactions(user_id,COUNT,from);
 		System.out.println("!!! Size new buffer: "+buffer.size());
@@ -39,7 +39,7 @@ public class BitcoinTransactionsIterator implements Iterator<Map<String,Object>>
 		System.out.println("!!! Next 2");
 		try {
 			fillBuffer();
-		} catch (BitcoinConnectionError e) {
+		} catch (BitcoinConnectionException e) {
 			return false; // hasNext can't throws exceptions
 		}
 		System.out.println("!!! Next 3");
@@ -58,7 +58,7 @@ public class BitcoinTransactionsIterator implements Iterator<Map<String,Object>>
 		} else {
 			try {
 				fillBuffer();
-			} catch (BitcoinConnectionError e) {
+			} catch (BitcoinConnectionException e) {
 				return null; // next can't throws exceptions
 			}
 			return bufferi.next();
@@ -70,7 +70,7 @@ public class BitcoinTransactionsIterator implements Iterator<Map<String,Object>>
 		
 	}
 
-	public static void main(String []args) throws BitcoinConnectionError {
+	public static void main(String []args) throws BitcoinConnectionException {
 		BitcoinTransactionsIterator bt = null;
 		bt = new BitcoinTransactionsIterator(1, new Bitcoin(true));
 		
