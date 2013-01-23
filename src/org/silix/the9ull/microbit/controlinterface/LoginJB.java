@@ -285,12 +285,11 @@ public class LoginJB {
 		}
 		try {
 			Tx tx = ub.sendTo(contactAddress,hm);
-			if(tx.getStrError()!=null) {
+			if(tx==null || tx.getStrError()!=null) {
 				setSentTo(false);
 				setStrError(tx.getStrError());
 				return;
-			}
-			if(tx!=null){
+			} else {
 				setSentTo(true);
 				BigDecimal f = tx.getFee();
 				if(f==null) {
@@ -300,8 +299,7 @@ public class LoginJB {
 					setFee(f.negate());
 				else
 					setFee(f);
-			} else
-				setSentTo(false);
+			}
 		} catch (RemoteException e) {
 			setSentTo(false);
 			System.out.println("EJB server problem.");
