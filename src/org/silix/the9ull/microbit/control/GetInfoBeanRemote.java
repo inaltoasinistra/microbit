@@ -12,7 +12,7 @@ public interface GetInfoBeanRemote {
     public BigDecimal valueBtcUsd();
     public BigDecimal valueBtcEur();
     
-    public int getIdFromAddress(String address);
+    public Integer getIdFromAddress(String address);
     public String getAddressFromId(int id);
 }
 

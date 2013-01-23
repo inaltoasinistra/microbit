@@ -403,10 +403,13 @@ public class LoginJB {
 			howMuch = h.getHowmuch();
 			Date when = h.getWhen();
 			
-			System.out.println("LoginBD: Date: "+when);
 			String[] date = when.toString().split(" ");
 			assert date.length == 2;
-			assert(date[1].length()>=8);
+			if(date[1].length()<8) {
+				System.out.println("LoginJB: Date format wrong: "+when);
+				setStrError("Error in hisory retrieving");
+				return "";
+			}
 			System.out.println("LoginBD: Date: "+date[1]);
 			date[1] = date[1].substring(0, 8);
 			if(!date[0].equals(lastDate)) {

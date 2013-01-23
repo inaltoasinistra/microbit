@@ -54,13 +54,13 @@ public class GetInfoBean implements GetInfoBeanRemote {
 	}
 
 	@Override
-	public int getIdFromAddress(String address) {
+	public Integer getIdFromAddress(String address) {
 		Query q = session.createQuery("from UserP usr where usr.deposit_address='"+address+"'");
 		@SuppressWarnings("unchecked")
 		List<UserP> l = (List<UserP>) q.list();
 		if(l.size()>0)
 			return l.get(0).getId();
-		return -1;
+		return null;
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class GetInfoBean implements GetInfoBeanRemote {
 		if(user!=null)
 			return user.getDeposit_address();
 		else
-			return "";
+			return null;
 	}
 	
 	public void ejbRemove() {
