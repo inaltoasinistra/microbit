@@ -285,7 +285,10 @@ public class LoginJB {
 		}
 		try {
 			Tx tx = ub.sendTo(contactAddress,hm);
-			if(tx==null || tx.getStrError()!=null) {
+			if(tx==null) {
+				setSentTo(false);
+				return;
+			} else if(tx.getStrError()!=null) {
 				setSentTo(false);
 				setStrError(tx.getStrError());
 				return;
@@ -400,10 +403,11 @@ public class LoginJB {
 			howMuch = h.getHowmuch();
 			Date when = h.getWhen();
 			
+			System.out.println("LoginBD: Date: "+when);
 			String[] date = when.toString().split(" ");
 			assert date.length == 2;
 			assert(date[1].length()>=8);
-			System.out.println("LoginBD: Data: "+date[1]);
+			System.out.println("LoginBD: Date: "+date[1]);
 			date[1] = date[1].substring(0, 8);
 			if(!date[0].equals(lastDate)) {
 				lastDate = date[0];

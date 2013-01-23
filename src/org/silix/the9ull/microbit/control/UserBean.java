@@ -236,8 +236,10 @@ public class UserBean implements UserBeanRemote {
 		Tx tx;
 		System.out.println("UserBean: sendTo "+address+" "+howMuch);
 		if(howMuch.compareTo(new BigDecimal(0))<=0) {
-			System.out.println("howMuch>0");
-			return null;
+			System.out.println("howMuch<=0");
+			tx = new Tx();
+			tx.setStrError("Set the amount of the transaction");
+			return tx;
 		}
 		// Is alias an user id?
 		
