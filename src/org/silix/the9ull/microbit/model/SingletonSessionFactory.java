@@ -12,6 +12,11 @@ public class SingletonSessionFactory {
 
 	static private SessionFactory sessionFactory = null;
 	
+	static private Session session = null;
+	/* A global session have to be used because an user behavior affect others
+	 * (1 → 2 transaction affects user's 1 and user's 2 fund)
+	 */
+	
 	private SingletonSessionFactory() {
 	}
 	
@@ -37,9 +42,13 @@ public class SingletonSessionFactory {
 	}
 	
 	public static Session getSession(){
-		return getSessionFactory().openSession();
+		if(session==null) {
+			session = getSessionFactory().openSession();
+		}
+		return session;
 	}
 	public static void closeSession(Session session){
-		session.close();
+		//session.close();
+		// Close session? Nah. There's only one global session
 	}
 }

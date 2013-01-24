@@ -120,8 +120,6 @@ public class UserBean implements UserBeanRemote {
 			htx.rollback();
 			return null;
 		}
-		// Update user, other clients could gave me mony
-		user = (UserP) session.get(UserP.class, user);
 		htx.commit();
 		return user.getFund();
 	}
