@@ -167,10 +167,6 @@ public class LoginJB {
 		System.out.println("LoginJB: setFund: Read only value");
 	}
 
-	public void updateFund() {
-		// TODO: ???
-	}
-
 	final static String htmldelete = "<form name=\"deleteContact\" action=\"index.jsp?deleteContact\" method=\"POST\">" +
 			"<input type=\"hidden\" name=\"alias\" value=\"$ALIAS\" />" +
 			"<input type=\"hidden\" name=\"contactAddress\" value=\"$ADDRESS\" />" +

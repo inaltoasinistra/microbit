@@ -120,6 +120,8 @@ public class UserBean implements UserBeanRemote {
 			htx.rollback();
 			return null;
 		}
+		// Update user, other clients could gave me mony
+		user = (UserP) session.get(UserP.class, user);
 		htx.commit();
 		return user.getFund();
 	}
@@ -140,29 +142,6 @@ public class UserBean implements UserBeanRemote {
 		return user;
 	}
 
-	public boolean newContact2(String alias, String address)
-			throws RemoteException {
-		if(user==null)
-			return false;
-		Transaction tx = session.beginTransaction();
-		Set<ContactP> cc = user.getContacts();
-		
-		
-		ContactP c = new ContactP();
-		c.setUser(getUser());
-		c.setAlias(alias);
-		c.setAddress(address);
-		
-		cc.add(c);
-		System.out.println("New contact: "+c.getAlias());
-		//session.update(cc); // And what's happen with existing contacts?
-		//not needed, stackoverflow said
-		session.save(c);
-		
-		tx.commit();
-		return true;
-	}
-	
 	@Override
 	public boolean newContact(String alias, String address)
 			throws RemoteException {
@@ -175,7 +154,7 @@ public class UserBean implements UserBeanRemote {
 		c.setAlias(alias);
 		ContactP old = (ContactP) session.get(ContactP.class, c);
 		if(old!=null) {
-			tx.commit();
+			tx.rollback();
 			return false;
 		}
 		c.setAddress(address);
@@ -198,7 +177,7 @@ public class UserBean implements UserBeanRemote {
 		c.setAlias(alias);
 		c = (ContactP) session.get(ContactP.class, c);
 		if(c==null) {
-			tx.commit();
+			tx.rollback();
 			System.out.println("Contact not deleted: "+alias);
 			return false;
 		}
@@ -262,7 +241,7 @@ public class UserBean implements UserBeanRemote {
 			// Transaction to User
 			
 			if(toUserId == user.getId()){
-				htx.commit();
+				htx.rollback();
 				return null;
 			}
 
@@ -270,7 +249,7 @@ public class UserBean implements UserBeanRemote {
 			toUser = (UserP) session.get(UserP.class, toUserId);
 			if(toUser==null) {
 				System.out.println("UserBean: User transaction 2.");
-				htx.commit();
+				htx.rollback();
 				return null;
 			}
 			 
@@ -288,7 +267,7 @@ public class UserBean implements UserBeanRemote {
 				return tx;	
 			} else {
 				System.out.println("User transaction 5.");
-				htx.commit();
+				htx.rollback();
 				return null;
 			}
 		} else {
