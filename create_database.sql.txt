@@ -1,2 +1,49 @@
 
-I every *P.java file there is the query to create the relative table
+;; I every *P.java file there is the query to create the relative table
+
+CREATE DATABASE `microbit`;
+
+USE `microbit`;
+
+CREATE TABLE `User` ( 
+`id` INT(10) NOT NULL AUTO_INCREMENT,
+`deposit_address` VARCHAR(34),
+`password` VARCHAR(40) NOT NULL, 
+`fund` DECIMAL(18,8) UNSIGNED,
+`email` VARCHAR(50),  
+PRIMARY KEY (`id`),
+KEY (`deposit_address`),
+UNIQUE KEY (`deposit_address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `Contact` ( 
+`id_user` INT(10) NOT NULL,
+`alias` VARCHAR(50) NOT NULL,
+`address` VARCHAR(34), 
+PRIMARY KEY (`id_user`,`alias`), 
+KEY `FK_id` (`id_user`), 
+CONSTRAINT `FK_id` FOREIGN KEY (`id_user`) REFERENCES `User` (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `History` ( 
+`id` INT(10) NOT NULL AUTO_INCREMENT,
+`from` INT(10) NOT NULL,
+`to` INT(10) NOT NULL,
+`when` DATETIME,
+`howmuch` DECIMAL(18,8),
+`fee` DECIMAL(18,8),
+`txidcrc` BIGINT,
+PRIMARY KEY (`id`),
+KEY (`txidcrc`),
+KEY `FK_fromto` (`from`), 
+CONSTRAINT `FK_from` FOREIGN KEY (`from`) REFERENCES `User` (`id`),
+CONSTRAINT `FK_to` FOREIGN KEY (`to`) REFERENCES `User` (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `Dict` (
+`key` VARCHAR(20) NOT NULL,
+`value` VARCHAR(100),
+PRIMARY KEY(`key`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
