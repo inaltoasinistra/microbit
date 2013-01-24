@@ -22,13 +22,10 @@ import javax.inject.Named;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.silix.the9ull.microbit.model.BitcoinConnectionException;
 import org.silix.the9ull.microbit.model.ContactP;
 import org.silix.the9ull.microbit.model.HistoryP;
 import org.silix.the9ull.microbit.model.PersistenceUtility;
-import org.silix.the9ull.microbit.model.SHA1;
 import org.silix.the9ull.microbit.model.SingletonSessionFactory;
-import org.silix.the9ull.microbit.model.Transactions;
 import org.silix.the9ull.microbit.model.Tx;
 import org.silix.the9ull.microbit.model.UserP;
 

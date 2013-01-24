@@ -1,5 +1,6 @@
 package org.silix.the9ull.microbit.control;
 
+import java.math.BigDecimal;
 import java.rmi.RemoteException;
 
 import javax.ejb.Stateless;
@@ -7,7 +8,6 @@ import javax.inject.Named;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.silix.the9ull.microbit.model.BitcoinConnectionException;
 import org.silix.the9ull.microbit.model.PersistenceUtility;
 import org.silix.the9ull.microbit.model.SingletonSessionFactory;
 import org.silix.the9ull.microbit.model.UserP;
@@ -28,7 +28,7 @@ public class RegisterBean implements RegisterBeanRemote {
 		
 	
 		try {
-			newUser = PersistenceUtility.newUser(email, password, session);
+			newUser = newUser(email, password, session);
 		} catch (BitcoinConnectionException e) {
 			tx.rollback();
 			SingletonSessionFactory.closeSession(session);
@@ -43,6 +43,33 @@ public class RegisterBean implements RegisterBeanRemote {
 		SingletonSessionFactory.closeSession(session);
 		
 		return newUser;
+	}
+	
+	public static UserP newUser(String email, String password, Session session) throws BitcoinConnectionException {
+		// TODO: move this code out of here
+		int id_user;
+		Bitcoin bc = new Bitcoin(true);
+		UserP user = new UserP();
+		
+		user.setEmail(email);
+		user.setFund(new BigDecimal(0.0));
+		user.setPassword("Just a second");
+		id_user = (Integer) session.save(user);
+		System.out.println("User_id: "+id_user);
+		user.setPassword(SHA1.HMAC_digest(""+id_user,password));
+		System.out.println("Password: "+user.getPassword());
+		
+		//deposit address
+		String daddress = bc.getnewaddress("user"+id_user);
+		if(daddress==null){
+			System.out.println("Error: Is Bitcoin started?");
+			return null;
+		}
+		System.out.println("New address: "+daddress);
+		
+		user.setDeposit_address(daddress);
+		session.update(user);
+		return user;
 	}
 
 	public void ejbRemove() {

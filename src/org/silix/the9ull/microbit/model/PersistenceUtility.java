@@ -7,6 +7,9 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.silix.the9ull.microbit.control.Bitcoin;
+import org.silix.the9ull.microbit.control.BitcoinConnectionException;
+import org.silix.the9ull.microbit.control.SHA1;
 
 public class PersistenceUtility {
 
@@ -28,33 +31,6 @@ public class PersistenceUtility {
 		}
 		pair.setValue(value);
 		session.saveOrUpdate(pair);
-	}
-	
-	public static UserP newUser(String email, String password, Session session) throws BitcoinConnectionException {
-		// TODO: move this code out of here
-		int id_user;
-		Bitcoin bc = new Bitcoin(true);
-		UserP user = new UserP();
-		
-		user.setEmail(email);
-		user.setFund(new BigDecimal(0.0));
-		user.setPassword("Just a second");
-		id_user = (Integer) session.save(user);
-		System.out.println("User_id: "+id_user);
-		user.setPassword(SHA1.HMAC_digest(""+id_user,password));
-		System.out.println("Password: "+user.getPassword());
-		
-		//deposit address
-		String daddress = bc.getnewaddress("user"+id_user);
-		if(daddress==null){
-			System.out.println("Error: Is Bitcoin started?");
-			return null;
-		}
-		System.out.println("New address: "+daddress);
-		
-		user.setDeposit_address(daddress);
-		session.update(user);
-		return user;
 	}
 	
 	public static void resetPasswords(Session session) {

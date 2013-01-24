@@ -1,4 +1,4 @@
-package org.silix.the9ull.microbit.model;
+package org.silix.the9ull.microbit.control;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -12,6 +12,11 @@ import java.util.zip.CRC32;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.silix.the9ull.microbit.model.HistoryP;
+import org.silix.the9ull.microbit.model.PersistenceUtility;
+import org.silix.the9ull.microbit.model.SingletonSessionFactory;
+import org.silix.the9ull.microbit.model.Tx;
+import org.silix.the9ull.microbit.model.UserP;
 
 /*
  * Singleton. This class is a wrapper of Bitcoin,

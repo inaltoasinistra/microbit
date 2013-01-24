@@ -1,4 +1,4 @@
-package org.silix.the9ull.microbit.model;
+package org.silix.the9ull.microbit.control;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -25,8 +25,7 @@ import com.googlecode.jj1.ServiceProxy;
 public class Bitcoin {
 
 	static String rpcuser;
-	static String rpcpassword;
-	static private BigDecimal fee = null; 
+	static String rpcpassword; 
 	
 	private int minconf = 2;
 	private ServiceProxy proxy;
@@ -83,7 +82,7 @@ public class Bitcoin {
 	}
 	
 	
-	String getnewaddress(String account) throws BitcoinConnectionException {
+	public String getnewaddress(String account) throws BitcoinConnectionException {
 		String result;
 		try {
 			if(account==null)

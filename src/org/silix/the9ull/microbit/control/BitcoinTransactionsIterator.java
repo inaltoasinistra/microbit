@@ -1,4 +1,4 @@
-package org.silix.the9ull.microbit.model;
+package org.silix.the9ull.microbit.control;
 
 import java.net.ConnectException;
 import java.util.Collection;
