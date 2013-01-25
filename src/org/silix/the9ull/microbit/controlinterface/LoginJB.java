@@ -406,7 +406,7 @@ public class LoginJB {
 				setStrError("Error in hisory retrieving");
 				return "";
 			}
-			System.out.println("LoginBD: Date: "+date[1]);
+			System.out.println("LoginJB: Date: "+date[1]);
 			date[1] = date[1].substring(0, 8);
 			if(!date[0].equals(lastDate)) {
 				lastDate = date[0];

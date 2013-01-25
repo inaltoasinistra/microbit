@@ -216,7 +216,7 @@ public class Transactions {
 				
 				//Object x = tx.get("timereceived");
 				//System.out.println(x);
-				Date timereceived = new Date(1000 * (Long)tx.get("timereceived"));
+				Timestamp timereceived = new Timestamp(1000 * (Long)tx.get("timereceived"));
 				history.setWhen(timereceived);
 				
 				String address = (String)tx.get("address");
