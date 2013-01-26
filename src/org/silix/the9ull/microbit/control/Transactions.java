@@ -202,6 +202,7 @@ public class Transactions {
 		
 		
 		Map<String,Object> listsince = bc.listsinceblock(lastblock); // transactions, lastblock
+		@SuppressWarnings("unchecked")
 		Collection<Map<String,Object>> transactions = (Collection<Map<String,Object>>)listsince.get("transactions");
 		lastblock = (String)listsince.get("lastblock");
 		
@@ -222,9 +223,7 @@ public class Transactions {
 				String address = (String)tx.get("address");
 				q = session.createQuery("from UserP user where user.deposit_address='"+address+"'");
 				if(q.list().size()==0) {
-					System.out.println("Unknown deposit_address: "+address);
-					// Save new funds only in funds variable
-					funds.put(address, new BigDecimal((Double)tx.get("amount")).setScale(8,BigDecimal.ROUND_HALF_DOWN));
+					System.out.println("Unknown deposit_address: "+address+" (Transaction ignored)"); 
 					continue;
 				}
 				UserP user = (UserP)q.list().get(0);
@@ -236,7 +235,7 @@ public class Transactions {
 				// Is history object already persistance?
 				q = session.createQuery("from HistoryP h where h.txidcrc="+history.getTxidcrc());
 				if(q.list().size()>0){
-					//xSystem.out.println("Oh, crc trovato!");
+					//System.out.println("Oh, crc trovato!");
 					boolean exists = false;
 					for(Object o : q.list()) {
 						HistoryP h = (HistoryP)o;
