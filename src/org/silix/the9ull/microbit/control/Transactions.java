@@ -248,6 +248,7 @@ public class Transactions {
 								h.getWhen().compareTo(history.getWhen())==0
 								) {
 							exists = true;
+							System.out.println("!!! Transaction yet considered "+h.getHowmuch());
 							continue;
 						}
 						

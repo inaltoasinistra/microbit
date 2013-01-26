@@ -20,29 +20,29 @@ public class BitcoinTransactionsIterator implements Iterator<Map<String,Object>>
 		this.user_id = user_id;
 		this.bc = bc;
 		fillBuffer();
-		System.out.println("!!! Inited the iterator");
+		//System.out.println("!!! Inited the iterator");
 	}
 	
 	private void fillBuffer() throws BitcoinConnectionException {
-		System.out.println("!!! Filling the buffer");
+		//System.out.println("!!! Filling the buffer");
 		buffer = bc.listtransactions(user_id,COUNT,from);
-		System.out.println("!!! Size new buffer: "+buffer.size());
+		//System.out.println("!!! Size new buffer: "+buffer.size());
 		bufferi = buffer.iterator();
 		from += buffer.size();
 	}
 	
 	@Override
 	public boolean hasNext() {
-		System.out.println("!!! Next");
+		//System.out.println("!!! Next");
 		if(bufferi.hasNext())
 			return true;
-		System.out.println("!!! Next 2");
+		//System.out.println("!!! Next 2");
 		try {
 			fillBuffer();
 		} catch (BitcoinConnectionException e) {
 			return false; // hasNext can't throws exceptions
 		}
-		System.out.println("!!! Next 3");
+		//System.out.println("!!! Next 3");
 		if(buffer.isEmpty())
 			return false;
 		else
@@ -51,7 +51,7 @@ public class BitcoinTransactionsIterator implements Iterator<Map<String,Object>>
 
 	@Override
 	public Map<String, Object> next() {
-		System.out.println("!!! Next");
+		//System.out.println("!!! Next");
 		Map<String, Object> tx = bufferi.next();
 		if(tx!=null) {
 			return tx;

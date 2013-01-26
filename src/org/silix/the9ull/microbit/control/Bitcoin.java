@@ -150,9 +150,9 @@ public class Bitcoin {
 	public BigDecimal getbalanceall() throws BitcoinConnectionException {
 		BigDecimal balance = new BigDecimal(0.0);
 		for(double d: listaccounts().values()){
-			System.out.println("!!! "+d);
+			//System.out.println("!!! "+d);
 			balance = balance.add(new BigDecimal(d));
-			System.out.println("!!! Balance "+balance);
+			//System.out.println("!!! Balance "+balance);
 		}
 		return balance.setScale(8,BigDecimal.ROUND_HALF_DOWN);
 	}
