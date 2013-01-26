@@ -5,17 +5,17 @@ import java.util.List;
 public class HTMLUtilities {
 
 	static String printTable(List<List<String>> table, List<String> header) {
-		String ret = "<table border=\"1\">";
+		String ret = "<table class=\"collapse\">";
 		if(header!=null){
 			ret += "<tr>";
 			for(String s : header)
-				ret += "<th>"+s+"</th>";
+				ret += "<th class=\"border\">"+s+"</th>";
 			ret += "</tr>";
 		}
 		for(List<String> l : table) {
 			ret += "<tr>";
 			for(String s : l)
-				ret += "<td>"+s+"</td>";
+				ret += "<td class=\"border\">"+s+"</td>";
 			ret += "</tr>";
 		}
 		return ret+"</table>";

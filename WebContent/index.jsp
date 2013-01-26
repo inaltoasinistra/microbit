@@ -8,6 +8,23 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Micro Bi(t). Home</title>
+<style TYPE="text/css">
+table.collapse {
+  border-collapse:collapse;
+}
+td.border {
+  border-style:solid; 
+  border-width:1px; 
+  border-color:#333333; 
+  padding:3px;
+}
+th.border {
+  border-style:solid; 
+  border-width:1px; 
+  border-color:#333333; 
+  padding:1px;
+}
+</style>
 </head>
 <body>
 <jsp:include page="header.jsp" />
