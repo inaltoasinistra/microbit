@@ -107,7 +107,7 @@ public class MtGoxInfo {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public String download(String url){
+	private String download(String url){
 		URL url1;
 		InputStream is = null;
 		DataInputStream dis;
