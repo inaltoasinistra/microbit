@@ -17,3 +17,6 @@ Connect to MySql db
 
 mysql --user=root --password=ddww4l microbit
 
+
+
+#java #bitcoin #payment #centralize
